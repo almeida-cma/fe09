@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio 2 — Livraria Lumina</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #f8fafc; line-height: 1.65; padding: 24px 14px 80px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .header { background: linear-gradient(135deg, #0369a1 0%, #0284c7 50%, #38bdf8 100%); border-radius: 16px; padding: 32px 28px; color: #fff; margin-bottom: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+  .header h1 { font-size: 1.7rem; margin-bottom: 8px; font-weight: 800; }
+  .header p { opacity: 0.95; font-size: 0.98rem; }
+
+  .painel-missao { background: #1e293b; border-radius: 12px; padding: 22px 24px; margin-bottom: 26px; border: 1px solid #334155; }
+  .painel-missao h2 { color: #38bdf8; font-size: 1.15rem; margin-bottom: 10px; }
+  .painel-missao p { font-size: 0.92rem; color: #cbd5e1; margin-bottom: 10px; }
+  .painel-missao ol { margin-left: 20px; font-size: 0.9rem; color: #cbd5e1; }
+  .painel-missao ol li { margin-bottom: 6px; }
+
+  .bug { background: #1e293b; border-radius: 14px; padding: 24px 26px; margin-bottom: 20px; border: 1px solid #334155; border-top: 5px solid #ef4444; position: relative; }
+  .bug.silencioso { border-top-color: #f59e0b; }
+  .bug::before { content: attr(data-num); position: absolute; top: -14px; left: 22px; background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 900; letter-spacing: 0.5px; }
+  .bug.silencioso::before { background: linear-gradient(135deg,#f59e0b,#d97706); }
+  .bug h3 { font-size: 1.15rem; color: #fff; margin-bottom: 14px; padding-top: 2px; }
+
+  .bloco { padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 12px; }
+  .bloco strong { display: block; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+
+  .bloco-deveria { background: rgba(34,197,94,0.12); border-left: 4px solid #22c55e; color: #bbf7d0; }
+  .bloco-deveria strong { color: #4ade80; }
+
+  .bloco-acontece { background: rgba(245,158,11,0.12); border-left: 4px solid #f59e0b; color: #fde68a; }
+  .bloco-acontece strong { color: #fbbf24; }
+
+  .bloco-console { background: #0b0f19; border-left: 4px solid #ef4444; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #fca5a5; line-height: 1.6; white-space: pre-wrap; }
+  .bloco-console strong { color: #f87171; font-family: 'Segoe UI', sans-serif; }
+
+  .bloco-pista { background: rgba(56,189,248,0.12); border-left: 4px solid #38bdf8; color: #bae6fd; }
+  .bloco-pista strong { color: #38bdf8; }
+
+  .teste-area { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #38bdf8; border-radius: 14px; padding: 26px 28px; margin-top: 36px; text-align: center; }
+  .teste-area h2 { color: #38bdf8; font-size: 1.3rem; margin-bottom: 8px; }
+  .teste-area p { color: #cbd5e1; font-size: 0.92rem; margin-bottom: 18px; }
+
+  .upload-box { background: rgba(255,255,255,0.04); border: 2px dashed #475569; border-radius: 12px; padding: 28px 20px; cursor: pointer; transition: 0.2s; }
+  .upload-box:hover { border-color: #38bdf8; background: rgba(56,189,248,0.06); }
+  .upload-box .icone { font-size: 2.2rem; margin-bottom: 8px; }
+  .upload-box .txt-principal { font-size: 0.95rem; font-weight: 700; color: #fff; }
+  .upload-box .txt-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 4px; }
+
+  .resultado-box { margin-top: 20px; background: #0b0f19; border: 1px solid #334155; border-radius: 10px; padding: 18px; font-family: 'Courier New', monospace; font-size: 0.84rem; text-align: left; line-height: 1.8; white-space: pre-wrap; display: none; }
+  .resultado-box.ativo { display: block; }
+  .ok { color: #4ade80; }
+  .aviso { color: #fbbf24; }
+  .erro { color: #f87171; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="header">
+    <h1>🔍 Desafio de Depuração — Livraria Lumina</h1>
+    <p>O portal da Livraria Lumina foi entregue com 5 problemas no JavaScript. Agora é a sua vez de identificar e solucionar cada um deles usando o console do navegador.</p>
+  </header>
+
+  <section class="painel-missao">
+    <h2>🎯 Seu Plano de Investigação</h2>
+    <ol>
+      <li>Abra o <code>projeto2.html</code> no navegador e pressione <strong>F12</strong> para acessar a aba <strong>Console</strong>.</li>
+      <li>Abra o mesmo arquivo no VSCode (ou seu editor de código).</li>
+      <li>Reproduza os problemas descritos abaixo para ver as mensagens de erro reais no console.</li>
+      <li>Investigue a causa consultando o código do <code>&lt;script&gt;</code> e aplique a correção.</li>
+      <li>Quando concluir, carregue o arquivo no final desta página para validar se os 5 bugs foram solucionados!</li>
+    </ol>
+  </section>
+
+  <!-- BUG 1 -->
+  <article class="bug" data-num="DESAFIO 1">
+    <h3>Botão do catálogo não responde</h3>
+
+    <div class="bloco bloco-deveria">
+      <strong>Comportamento Esperado:</strong>
+      Ao clicar no botão amarelo "Baixar catálogo", deve abrir um alerta avisando que o catálogo foi enviado para o e-mail.
+    </div>
+
+    <div class="bloco bloco-acontece">
+      <strong>O que acontece hoje:</strong>
+      Ao clicar, nada acontece na tela e o console acusa que uma função não foi definida.
+    </div>
+
+    <div class="bloco bloco-console">
+<strong>Erro no Console (F12):</strong>
+Uncaught ReferenceError: baixarCatalogo is not defined at HTMLButtonElement.onclick</div>
+
+    <div class="bloco bloco-pista">
+      <strong>Pista de Investigação:</strong>
+      Compare cuidadosamente o nome da função que a tag <code>&lt;button&gt;</code> está tentando chamar no seu <code>onclick</code> com o nome da função que foi realmente declarada no bloco <code>&lt;script&gt;</code>.
+    </div>
+  </article>
+
+  <!-- BUG 2 -->
+  <article class="bug" data-num="DESAFIO 2">
+    <h3>Campo de identificação quebra ao confirmar nome</h3>
+
+    <div class="bloco bloco-deveria">
+      <strong>Comportamento Esperado:</strong>
+      Ao digitar seu nome no campo "Seu Nome" e teclar Enter (ou clicar fora), o site deve saudar o leitor com uma mensagem personalizada contendo o nome digitado.
+    </div>
+
+    <div class="bloco bloco-acontece">
+      <strong>O que acontece hoje:</strong>
+      Ao teclar Enter no campo, nenhuma mensagem é exibida e o console acusa que o código tentou ler <code>value</code> de algo que é <code>null</code>.
+    </div>
+
+    <div class="bloco bloco-console">
+<strong>Erro no Console (F12):</strong>
+Uncaught TypeError: Cannot read properties of null (reading 'value') at saudarLeitor</div>
+
+    <div class="bloco bloco-pista">
+      <strong>Pista de Investigação:</strong>
+      Na função <code>saudarLeitor()</code>, observe o argumento passado para o <code>document.getElementById()</code>. O ID procurado pelo JavaScript bate de verdade com o atributo <code>id=""</code> que está na tag <code>&lt;input&gt;</code> do formulário?
+    </div>
+  </article>
+
+  <!-- BUG 3 -->
+  <article class="bug silencioso" data-num="DESAFIO 3 · SILENCIOSO">
+    <h3>Card de assinatura não reage ao passar o mouse</h3>
+
+    <div class="bloco bloco-deveria">
+      <strong>Comportamento Esperado:</strong>
+      Ao passar o cursor do mouse sobre o card "Assinatura Lumina", o fundo deve mudar para amarelo claro. Ao retirar o mouse de cima dele, o card deve restaurar seu fundo branco original.
+    </div>
+
+    <div class="bloco bloco-acontece">
+      <strong>O que acontece hoje:</strong>
+      Passar o mouse sobre o card não faz nada. O card só muda de cor se for clicado, e depois disso nunca mais volta para a cor branca original.
+    </div>
+
+    <div class="bloco bloco-console">
+<strong>Erro no Console (F12):</strong>
+(Silencioso — nenhum erro aparece no console, pois o código é válido, mas os eventos configurados não condizem com a experiência de hover)</div>
+
+    <div class="bloco bloco-pista">
+      <strong>Pista de Investigação:</strong>
+      Observe a linha onde o <code>addEventListener</code> é registrado para o card. Qual evento do mouse é disparado ao passar o cursor por cima? E qual evento é necessário registrar para detectar quando o cursor se afasta do elemento?
+    </div>
+  </article>
+
+  <!-- BUG 4 -->
+  <article class="bug" data-num="DESAFIO 4">
+    <h3>Cálculo de cupom quebra na formatação</h3>
+
+    <div class="bloco bloco-deveria">
+      <strong>Comportamento Esperado:</strong>
+      Ao clicar em "Aplicar 15% de Desconto", o valor com desconto deve aparecer formatado com duas casas decimais (ex: "Total com desconto: R$ 85.00").
+    </div>
+
+    <div class="bloco bloco-acontece">
+      <strong>O que acontece hoje:</strong>
+      Nenhum texto de resultado aparece na tela e o console acusa erro ao tentar invocar <code>toFixed</code> em um valor indefinido.
+    </div>
+
+    <div class="bloco bloco-console">
+<strong>Erro no Console (F12):</strong>
+Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed') at calcularCupom</div>
+
+    <div class="bloco bloco-pista">
+      <strong>Pista de Investigação:</strong>
+      A função <code>aplicarCupomDesconto(valor)</code> realiza a operação matemática corretamente, mas o que ela devolve para a função que a chamou? Lembre-se da instrução fundamental que entrega o resultado de uma função em JavaScript.
+    </div>
+  </article>
+
+  <!-- BUG 5 -->
+  <article class="bug silencioso" data-num="DESAFIO 5 · SILENCIOSO">
+    <h3>Contador de resenha não sai do zero</h3>
+
+    <div class="bloco bloco-deveria">
+      <strong>Comportamento Esperado:</strong>
+      Conforme o leitor escreve na caixa de resenha, o contador logo abaixo deve acompanhar a quantidade de caracteres digitados em tempo real (ex.: "24 / 150").
+    </div>
+
+    <div class="bloco bloco-acontece">
+      <strong>O que acontece hoje:</strong>
+      Mesmo digitando dezenas de palavras, o contador permanece estagnado em "0 / 150".
+    </div>
+
+    <div class="bloco bloco-console">
+<strong>Mensagem no Console ao digitar:</strong>
+Contador da resenha: 0 (esperado: 24)</div>
+
+    <div class="bloco bloco-pista">
+      <strong>Pista de Investigação:</strong>
+      Analise o laço <code>for</code> dentro de <code>contarCaracteresResenha()</code>. Qual é a condição estipulada para o laço continuar executando? Como podemos fazer essa condição depender do tamanho real do texto recebido?
+    </div>
+  </article>
+
+  <!-- VALIDAÇÃO FINAL -->
+  <section class="teste-area">
+    <h2>🧪 Validador Automatizado</h2>
+    <p>Consertou todos os 5 problemas no seu <code>projeto2.html</code>? Carregue o arquivo salvo abaixo para conferir o resultado.</p>
+
+    <div class="upload-box" id="drop-zone">
+      <div class="icone">📂</div>
+      <div class="txt-principal">Clique ou arraste seu projeto2.html aqui</div>
+      <div class="txt-sub">O validador testará as 5 funções diretamente no navegador</div>
+    </div>
+    <input type="file" id="arquivo-input" accept=".html" style="display:none;">
+
+    <div class="resultado-box" id="resultado-final"></div>
+  </section>
+
+</div>
+
+<script>
+  const dropZone = document.getElementById('drop-zone');
+  const arquivoInput = document.getElementById('arquivo-input');
+  const resultadoBox = document.getElementById('resultado-final');
+
+  dropZone.addEventListener('click', () => arquivoInput.click());
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#38bdf8';
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '#475569';
+  });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#475569';
+    if (e.dataTransfer.files.length) processarArquivo(e.dataTransfer.files[0]);
+  });
+
+  arquivoInput.addEventListener('change', () => {
+    if (arquivoInput.files.length) processarArquivo(arquivoInput.files[0]);
+  });
+
+  function processarArquivo(file) {
+    if (!file.name.endsWith('.html')) {
+      exibirResultado('❌ O arquivo precisa ser em formato .html. Você enviou: ' + file.name);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => executarBateriaTestes(e.target.result);
+    reader.readAsText(file);
+  }
+
+  function executarBateriaTestes(codigoHtml) {
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.top = '-10000px';
+    iframe.style.width = '800px';
+    iframe.style.height = '600px';
+    document.body.appendChild(iframe);
+
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(codigoHtml);
+    iframe.contentDocument.close();
+
+    setTimeout(() => {
+      const win = iframe.contentWindow;
+      const doc = iframe.contentDocument;
+
+      let log = '';
+
+      // Teste 1: Botão de Catálogo (Aceita renomear a função ou corrigir o onclick)
+      try {
+        const btn = doc.getElementById('btn-catalogo');
+        if (btn) {
+          let chamouAlerta = false;
+          win.alert = () => { chamouAlerta = true; };
+          btn.click();
+          if (chamouAlerta) {
+            log += '✅ Desafio 1 — Botão do catálogo: disparou a mensagem de sucesso!\n';
+          } else {
+            log += '❌ Desafio 1 — Botão do catálogo: o clique ainda não dispara o alerta esperado.\n';
+          }
+        } else {
+          log += '❌ Desafio 1 — Botão do catálogo (#btn-catalogo) não foi encontrado.\n';
+        }
+      } catch (err) {
+        log += '❌ Desafio 1 — Botão do catálogo: erro ao clicar (' + err.message + ')\n';
+      }
+
+      // Teste 2: Campo de Nome e ID
+      try {
+        const campoLeitor = doc.getElementById('leitor');
+        if (campoLeitor) {
+          campoLeitor.value = 'Beatriz';
+          let mensagemAlerta = '';
+          win.alert = (msg) => { mensagemAlerta = msg; };
+          
+          if (typeof win.saudarLeitor === 'function') {
+            win.saudarLeitor();
+            if (mensagemAlerta && mensagemAlerta.indexOf('Beatriz') !== -1) {
+              log += '✅ Desafio 2 — Campo de leitor: capturou o nome e saudou corretamente!\n';
+            } else {
+              log += '❌ Desafio 2 — Campo de leitor: a função não encontrou o campo pelo id correto.\n';
+            }
+          } else {
+            log += '❌ Desafio 2 — Função saudarLeitor não encontrada.\n';
+          }
+        } else {
+          log += '❌ Desafio 2 — Campo de input (#leitor) não encontrado.\n';
+        }
+      } catch (err) {
+        log += '❌ Desafio 2 — Campo de leitor: quebrou com erro (' + err.message + ')\n';
+      }
+
+      // Teste 3: Card de Assinatura (mouseover + mouseout)
+      try {
+        const card = doc.getElementById('card-clube');
+        if (card) {
+          const bgOriginal = card.style.background || card.style.backgroundColor;
+          card.dispatchEvent(new win.MouseEvent('mouseover', { bubbles: true }));
+          const bgHover = card.style.background || card.style.backgroundColor;
+          card.dispatchEvent(new win.MouseEvent('mouseout', { bubbles: true }));
+          const bgRestaurado = card.style.background || card.style.backgroundColor;
+
+          if (bgHover && bgHover !== bgOriginal && bgRestaurado !== bgHover) {
+            log += '✅ Desafio 3 — Card do clube: mouseover e mouseout funcionando perfeitamente!\n';
+          } else if (bgHover && bgHover !== bgOriginal) {
+            log += '⚠️ Desafio 3 — Card do clube: mouseover funciona, mas falta configurar o mouseout.\n';
+          } else {
+            log += '❌ Desafio 3 — Card do clube: não respondeu ao evento de mouseover.\n';
+          }
+        } else {
+          log += '❌ Desafio 3 — Card do clube (#card-clube) não encontrado.\n';
+        }
+      } catch (err) {
+        log += '❌ Desafio 3 — Card do clube: erro (' + err.message + ')\n';
+      }
+
+      // Teste 4: Função com return
+      try {
+        const fnCupom = win.aplicarCupomDesconto;
+        if (typeof fnCupom === 'function') {
+          const valorTeste = fnCupom(100);
+          if (valorTeste === 85) {
+            log += '✅ Desafio 4 — Cálculo do cupom: função entrega o resultado com return!\n';
+          } else if (valorTeste === undefined) {
+            log += '❌ Desafio 4 — Cálculo do cupom: a função ainda devolve undefined (falta return).\n';
+          } else {
+            log += '❌ Desafio 4 — Cálculo do cupom: cálculo retornou valor imprevisto (' + valorTeste + ').\n';
+          }
+        } else {
+          log += '❌ Desafio 4 — Função aplicarCupomDesconto não encontrada.\n';
+        }
+      } catch (err) {
+        log += '❌ Desafio 4 — Cálculo do cupom: erro (' + err.message + ')\n';
+      }
+
+      // Teste 5: Loop de Contagem com .length
+      try {
+        const fnContar = win.contarCaracteresResenha;
+        if (typeof fnContar === 'function') {
+          const contagem = fnContar('Lumina Livros');
+          if (contagem === 13) {
+            log += '✅ Desafio 5 — Contador de resenha: laço for percorrendo todos os caracteres!\n';
+          } else {
+            log += '❌ Desafio 5 — Contador de resenha: retornou ' + contagem + ' em vez de 13.\n';
+          }
+        } else {
+          log += '❌ Desafio 5 — Função contarCaracteresResenha não encontrada.\n';
+        }
+      } catch (err) {
+        log += '❌ Desafio 5 — Contador de resenha: erro (' + err.message + ')\n';
+      }
+
+      const totalAcertos = (log.match(/✅/g) || []).length;
+      const cabecalho = totalAcertos === 5
+        ? '🏆 ESPETACULAR! Você solucionou todos os 5 bugs do Desafio Lumina!\n\n'
+        : 'Progresso da Depuração: ' + totalAcertos + ' de 5 resolvidos.\n\n';
+
+      exibirResultado(cabecalho + log);
+      iframe.remove();
+    }, 300);
+  }
+
+  function exibirResultado(texto) {
+    resultadoBox.classList.add('ativo');
+    const linhas = texto.split('\n');
+    resultadoBox.innerHTML = linhas.map((linha) => {
+      if (linha.includes('✅')) return '<span class="ok">' + linha + '</span>';
+      if (linha.includes('⚠️')) return '<span class="aviso">' + linha + '</span>';
+      if (linha.includes('❌')) return '<span class="erro">' + linha + '</span>';
+      return linha;
+    }).join('\n');
+  }
+</script>
+</body>
+</html>

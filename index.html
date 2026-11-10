@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEMA 09 • JavaScript — Depuração, Biblioteca e Desafios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #4a1d6e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px 16px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 860px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        }
+
+        /* ===== CABEÇALHO ===== */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #7c3aed;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #0f172a;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 span {
+            color: #7c3aed;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 0.98rem;
+            max-width: 680px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .badge-tema {
+            display: inline-block;
+            background: #7c3aed;
+            color: #ffffff;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-tema-dois {
+            display: inline-block;
+            background: #a855f7;
+            color: #ffffff;
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.72rem;
+            margin-top: 4px;
+        }
+
+        /* ===== ITENS DO MENU ===== */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 18px 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            border-left: 6px solid #cbd5e1;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: #1e293b;
+            border-top: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .menu-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            background: #f5f3ff;
+        }
+
+        .menu-item .linha {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .menu-item .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+        }
+
+        .menu-item .info {
+            flex: 1;
+        }
+
+        .menu-item .info h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .menu-item .info p {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 3px;
+            line-height: 1.45;
+        }
+
+        .menu-item .seta {
+            font-size: 1.4rem;
+            color: #94a3b8;
+            transition: 0.25s;
+            flex-shrink: 0;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .menu-item:hover .seta {
+            color: #7c3aed;
+            transform: translateX(4px);
+        }
+
+        /* ===== CORES ESPECÍFICAS ===== */
+        .menu-item.apostila    { border-left-color: #0284c7; }
+        .menu-item.biblioteca  { border-left-color: #d97706; background: #fffbf7; }
+        .menu-item.aurora      { border-left-color: #7c3aed; }
+        .menu-item.lumina      { border-left-color: #ec4899; background: #fdf2f8; }
+        .menu-item.desafios    { border-left-color: #10b981; background: #f0fdf4; }
+
+        .menu-item.biblioteca:hover {
+            background: #fff7ed;
+            box-shadow: 0 6px 22px rgba(217, 119, 6, 0.15);
+        }
+
+        .menu-item.lumina:hover {
+            background: #fce7f3;
+            box-shadow: 0 6px 22px rgba(236, 72, 153, 0.15);
+        }
+
+        .menu-item.desafios:hover {
+            background: #ecfdf5;
+            box-shadow: 0 6px 22px rgba(16, 185, 129, 0.15);
+        }
+
+        /* ===== ETIQUETAS (BADGES) ===== */
+        .badge-atividade-azul {
+            background: #0284c7;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-azul 2s infinite;
+        }
+
+        @keyframes pulse-azul {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .badge-atividade-laranja {
+            background: #d97706;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-laranja 2s infinite;
+        }
+
+        @keyframes pulse-laranja {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .badge-atividade-roxo {
+            background: #7c3aed;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-roxo 2s infinite;
+        }
+
+        @keyframes pulse-roxo {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .badge-atividade-rosa {
+            background: #ec4899;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-rosa 2s infinite;
+        }
+
+        @keyframes pulse-rosa {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .badge-atividade-verde {
+            background: #10b981;
+            color: #ffffff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: auto;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            animation: pulse-verde 2s infinite;
+        }
+
+        @keyframes pulse-verde {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(0.98); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== CHECKLIST ===== */
+        .checklist-desafio {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .check-pill {
+            font-size: 0.7rem;
+            background: #ffffff;
+            color: #334155;
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+
+        .check-pill.aviso {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        .check-pill.entrega {
+            background: #f0fdf4;
+            color: #166534;
+            border-color: #bbf7d0;
+        }
+
+        /* Sub-links dentro do item */
+        .sublinks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .btn-sublink {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-sublink:hover {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+        }
+
+        .btn-sublink.principal {
+            background: #7c3aed;
+            color: #ffffff;
+            border-color: #7c3aed;
+        }
+
+        .btn-sublink.principal:hover {
+            background: #6d28d9;
+            border-color: #6d28d9;
+        }
+
+        .btn-sublink.rosa {
+            background: #ec4899;
+            color: #ffffff;
+            border-color: #ec4899;
+        }
+
+        .btn-sublink.rosa:hover {
+            background: #db2777;
+            border-color: #db2777;
+        }
+
+        /* ===== RODAPÉ ===== */
+        .footer {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #f1f5f9;
+        }
+
+        .footer h4 {
+            color: #0f172a;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: #f8fafc;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #1e293b;
+            transition: all 0.3s;
+            border: 1px solid #e2e8f0;
+            font-size: 0.92rem;
+        }
+
+        .footer-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            border-color: #7c3aed;
+        }
+
+        .footer-link.form {
+            border-left: 5px solid #16a34a;
+        }
+
+        .footer-link.form:hover {
+            border-color: #16a34a;
+            background: #f0fdf4;
+        }
+
+        .footer-link .icon-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .footer-link .texto {
+            flex: 1;
+        }
+
+        .footer-link .texto small {
+            display: block;
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .footer .obs {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.76rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 650px) {
+            .container { padding: 22px 16px; }
+            .header h1 { font-size: 1.45rem; }
+            .menu-item { padding: 14px 16px; }
+            .menu-item .info h3 { font-size: 0.95rem; }
+            .badge-atividade-azul,
+            .badge-atividade-laranja,
+            .badge-atividade-roxo,
+            .badge-atividade-rosa,
+            .badge-atividade-verde { font-size: 0.58rem; padding: 3px 8px; }
+            .footer-links { max-width: 100%; }
+        }
+
+        @media (max-width: 420px) {
+            .menu-item .info p { font-size: 0.78rem; }
+            .menu-item .seta { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== CABEÇALHO ===== -->
+    <header class="header">
+        <h1>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            TEMA <span>09</span> &bull; JavaScript
+        </h1>
+        <p>Depuração Front-end, Biblioteca de Componentes Fluidos e Desafios de Landing Pages Reais</p>
+        <span class="badge-tema">Console &bull; Depuração &bull; Componentes &bull; Desafios</span>
+        <br>
+        <span class="badge-tema-dois">Eventos &bull; Funções &bull; Laços &bull; Responsividade &bull; GitHub Pages</span>
+    </header>
+
+    <!-- ===== MENU PRINCIPAL ===== -->
+    <main class="menu-list">
+
+        <!-- 1) APOSTILA PRÁTICA -->
+        <a href="apostila.html" target="_blank" rel="noopener noreferrer" class="menu-item apostila">
+            <div class="linha">
+                <span class="icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        <line x1="8" y1="7" x2="16" y2="7"/>
+                        <line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                </span>
+                <div class="info">
+                    <h3>1) Apostila Prática: Depuração Front-end</h3>
+                    <p>Como abrir o console, ler erros, identificar bugs silenciosos e usar <code>console.log</code> para investigar problemas no código</p>
+                </div>
+                <span class="badge-atividade-azul">CONSULTA</span>
+                <span class="seta">&rarr;</span>
+            </div>
+        </a>
+
+        <!-- 2) BIBLIOTECA DE COMPONENTES -->
+        <a href="biblioteca.html" target="_blank" rel="noopener noreferrer" class="menu-item biblioteca">
+            <div class="linha">
+                <span class="icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                </span>
+                <div class="info">
+                    <h3>2) Biblioteca com 52 Modelos 100% Fluidos</h3>
+                    <p>Catálogo de componentes responsivos: navegação, hero, seções de site, formulários, rodapés e interativos</p>
+                </div>
+                <span class="badge-atividade-laranja">REFERÊNCIA</span>
+                <span class="seta">&rarr;</span>
+            </div>
+        </a>
+
+        <!-- 3) PROJETO AURORA -->
+        <div class="menu-item aurora">
+            <a href="instrucoes.html" target="_blank" rel="noopener noreferrer" class="linha">
+                <span class="icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </span>
+                <div class="info">
+                    <h3>3) Instruções — Projeto Aurora</h3>
+                    <p>O projeto tem 5 bugs. Abra o console (F12), leia os erros, conserte cada um, e teste no final</p>
+                </div>
+                <span class="badge-atividade-roxo">NA AULA</span>
+                <span class="seta">&rarr;</span>
+            </a>
+            <div class="sublinks">
+                <a href="projeto.html" target="_blank" rel="noopener noreferrer" class="btn-sublink principal">
+                    🐛 Abrir Projeto Aurora (com bugs)
+                </a>
+            </div>
+            <div class="checklist-desafio">
+                <span class="check-pill aviso">💻 Consertar os 5 bugs</span>
+                <span class="check-pill entrega">📤 Entregar como <code>aurora.html</code> no repositório final</span>
+            </div>
+        </div>
+
+        <!-- 4) LIVRARIA LUMINA -->
+        <div class="menu-item lumina">
+            <a href="instrucoes2.html" target="_blank" rel="noopener noreferrer" class="linha">
+                <span class="icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                </span>
+                <div class="info">
+                    <h3>4) Instruções — Livraria Lumina</h3>
+                    <p>Segundo projeto de depuração: livraria com catálogo, carrinho e formulários. Encontre e conserte os bugs com o console</p>
+                </div>
+                <span class="badge-atividade-rosa">NA AULA</span>
+                <span class="seta">&rarr;</span>
+            </a>
+            <div class="sublinks">
+                <a href="projeto2.html" target="_blank" rel="noopener noreferrer" class="btn-sublink rosa">
+                    📚 Abrir Livraria Lumina (com bugs)
+                </a>
+            </div>
+            <div class="checklist-desafio">
+                <span class="check-pill aviso">💻 Consertar os bugs da Lumina</span>
+                <span class="check-pill entrega">📤 Entregar como <code>lumina.html</code> no repositório final</span>
+            </div>
+        </div>
+
+        <!-- 5) DESAFIOS DE LANDING PAGES REAIS -->
+        <a href="desafios_biblioteca.html" target="_blank" rel="noopener noreferrer" class="menu-item desafios">
+            <div class="linha">
+                <span class="icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </span>
+                <div class="info">
+                    <h3>5) Enunciados das Landing Pages Reais</h3>
+                    <p>Escolha 2 desafios da biblioteca e entregue ambos publicados no GitHub Pages via links descritos no README do repositório de entrega</p>
+                </div>
+                <span class="badge-atividade-verde">ENTREGA FINAL</span>
+                <span class="seta">&rarr;</span>
+            </div>
+            <div class="checklist-desafio">
+                <span class="check-pill aviso">🎯 Escolher 2 desafios</span>
+                <span class="check-pill aviso">🌐 Publicar no GitHub Pages</span>
+                <span class="check-pill entrega">📄 README com os links das 2 páginas</span>
+            </div>
+        </a>
+
+    </main>
+
+    <!-- ===== RODAPÉ ===== -->
+    <footer class="footer">
+        <h4>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/>
+                <path d="m9 14 2 2 4-4"/>
+            </svg>
+            Relatório de Entrega da Aula
+        </h4>
+
+        <div class="footer-links">
+            <a href="https://forms.gle/zbUB57A4FteUDsKSA" target="_blank" rel="noopener noreferrer" class="footer-link form">
+                <span class="icon-box">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                </span>
+                <div class="texto">
+                    <strong>Envio do Relatório &bull; Tema 09 — JavaScript</strong>
+                    <small>aurora.html + lumina.html + 2 desafios publicados no GitHub Pages (links no README do repositório)</small>
+                </div>
+                <span class="seta" style="color: #16a34a; font-weight: bold; font-size: 1.2rem;">&rarr;</span>
+            </a>
+        </div>
+
+        <div class="obs">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/>
+                <path d="M10 22h4"/>
+            </svg>
+            Clique nos itens para abrir os arquivos em novas abas
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

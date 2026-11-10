@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Biblioteca Web & Modelos em Grid (52 Componentes 100% Fluidos)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-body: #070c18;
+            --bg-nav: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --accent: #818cf8;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #34d399;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* BARRA SUPERIOR */
+        .top-bar {
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--primary);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .busca-rapida {
+            background: #070c18;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            outline: none;
+            width: 230px;
+            transition: 0.2s;
+        }
+        .busca-rapida:focus { border-color: var(--primary); }
+
+        .viewport-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #070c18;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .btn-vp {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-vp:hover { color: #fff; background: var(--bg-card); }
+        .btn-vp.ativo { background: var(--primary); color: #070c18; font-weight: 800; }
+
+        /* ABAS DE CATEGORIAS E COMPONENTES */
+        .categorias-bar-wrap {
+            background: #0d1527;
+            border-bottom: 1px solid var(--border);
+            padding: 8px 20px;
+        }
+        .categorias-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+        .categorias-bar::-webkit-scrollbar { height: 4px; }
+        .categorias-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .cat-btn {
+            background: var(--bg-nav);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .cat-btn:hover { color: #fff; border-color: var(--primary); }
+        .cat-btn.ativo { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #070c18; font-weight: 800; border-color: transparent; }
+
+        .componentes-bar-wrap {
+            background: #070c18;
+            border-bottom: 1px solid var(--border);
+            padding: 8px 20px;
+        }
+        .componentes-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+        .componentes-bar::-webkit-scrollbar { height: 4px; }
+        .componentes-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .comp-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            flex-shrink: 0;
+        }
+        .comp-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .comp-btn.ativo { background: rgba(56, 189, 248, 0.15); color: var(--primary); border-color: rgba(56, 189, 248, 0.4); font-weight: 700; }
+
+        /* ÁREA DE VISUALIZAÇÃO */
+        .workspace {
+            flex: 1;
+            padding: 20px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .comp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .comp-header h1 { font-size: 1.5rem; color: #fff; }
+
+        .meta-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        .badge.resp { background: rgba(52, 211, 153, 0.15); color: #34d399; border-color: rgba(52, 211, 153, 0.4); }
+
+        .info-box {
+            background: var(--bg-nav);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            font-size: 0.86rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+        .info-box code { background: #070c18; color: #fbbf24; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+
+        .preview-box {
+            background: #040711;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 22px;
+        }
+        .preview-topbar {
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview-dots { display: flex; gap: 6px; }
+        .p-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .p-dot.r { background: #ef4444; }
+        .p-dot.y { background: #f59e0b; }
+        .p-dot.g { background: #10b981; }
+
+        .preview-meta { font-family: monospace; font-size: 0.75rem; color: var(--text-muted); }
+
+        .stage {
+            display: flex;
+            justify-content: center;
+            background: #020617;
+            padding: 16px;
+            min-height: 520px;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 560px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+
+        /* ABAS DE CÓDIGO */
+        .code-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); }
+        .c-tab {
+            padding: 9px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.15s;
+        }
+        .c-tab:hover { color: #fff; background: var(--bg-nav); }
+        .c-tab.ativa { color: var(--primary); border-bottom-color: var(--primary); }
+
+        .code-panel {
+            display: none;
+            position: relative;
+            background: #030712;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .code-panel.ativo { display: block; }
+
+        .btn-copiar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: #070c18;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .btn-copiar:hover { background: #7dd3fc; }
+
+        pre {
+            padding: 16px;
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 420px;
+        }
+
+        @media (max-width: 680px) {
+            .top-bar { flex-direction: column; align-items: stretch; }
+            .viewport-controls { justify-content: space-around; }
+            .stage { padding: 4px; }
+            .preview-iframe { border-radius: 4px; height: 460px; }
+            .busca-rapida { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA SUPERIOR -->
+    <header class="top-bar">
+        <div class="brand-box">
+            <span class="brand-title">🎨 Web Grid & Lib</span>
+            <span class="brand-badge">52 Modelos 100% Fluidos</span>
+        </div>
+
+        <input type="text" id="campoBusca" class="busca-rapida" placeholder="🔍 Buscar componente..." oninput="filtrarPorBusca()">
+
+        <div class="viewport-controls">
+            <button class="btn-vp ativo" onclick="ajustarResolucao('100%', this)">🖥️ 100%</button>
+            <button class="btn-vp" onclick="ajustarResolucao('1024px', this)">💻 1024px</button>
+            <button class="btn-vp" onclick="ajustarResolucao('768px', this)">📱 768px</button>
+            <button class="btn-vp" onclick="ajustarResolucao('375px', this)">📱 375px</button>
+            <button class="btn-vp" onclick="ajustarResolucao('320px', this)">📱 320px</button>
+        </div>
+    </header>
+
+    <!-- NAVEGAÇÃO DE CATEGORIAS -->
+    <div class="categorias-bar-wrap">
+        <div class="categorias-bar" id="listaCategorias"></div>
+    </div>
+
+    <!-- NAVEGAÇÃO DE COMPONENTES -->
+    <div class="componentes-bar-wrap">
+        <div class="componentes-bar" id="listaComponentes"></div>
+    </div>
+
+    <!-- WORKSPACE -->
+    <main class="workspace">
+        <div id="conteudoComponente"></div>
+    </main>
+
+<script>
+    /* ============================================================
+       BANCO COMPLETO COM TODOS OS 52 COMPONENTES
+       ============================================================ */
+    const BANCO = [
+        // ==================== 📐 MODELOS EM GRID ====================
+        {
+            id: 'grid-saas',
+            nome: 'Landing Page SaaS Completa',
+            icone: '🚀',
+            categoria: '📐 Modelos em Grid',
+            dicas: 'TOTALMENTE CORRIGIDO PARA 320px E 375px: Menu hambúrguer nativo com gaveta mobile, botões em 100% no mobile, mockup responsivo com dados e planos sem estouro lateral.',
+            html: `<div class="saas-page">
+    <header class="saas-nav">
+        <div class="saas-container nav-row">
+            <a href="#" class="saas-logo">⚡ CloudFlow</a>
+            <nav class="saas-menu-desk">
+                <a href="#recursos">Recursos</a>
+                <a href="#metricas">Métricas</a>
+                <a href="#precos">Preços</a>
+            </nav>
+            <div class="nav-right">
+                <a href="#precos" class="btn-acesso">Entrar</a>
+                <button class="btn-hamb" onclick="toggleSaasMenu()">☰</button>
+            </div>
+        </div>
+        <div class="saas-menu-mob" id="mobMenu">
+            <a href="#recursos" onclick="toggleSaasMenu()">Recursos</a>
+            <a href="#metricas" onclick="toggleSaasMenu()">Métricas</a>
+            <a href="#precos" onclick="toggleSaasMenu()">Preços</a>
+        </div>
+    </header>
+
+    <section class="saas-hero">
+        <div class="saas-container hero-grid">
+            <div class="hero-info">
+                <span class="badge-versao">✨ VERSÃO 4.0 PRONTA</span>
+                <h1>Automação em nuvem para <span>times modernos</span></h1>
+                <p>Conecte seus bancos de dados e gere pipelines serverless em minutos com total segurança.</p>
+                <div class="hero-actions">
+                    <a href="#precos" class="btn-prim">Testar 14 Dias Grátis</a>
+                    <a href="#recursos" class="btn-sec">Ver Recursos</a>
+                </div>
+                <div class="garantias">
+                    <span>✓ Sem cartão de crédito</span>
+                    <span>✓ Cancele quando quiser</span>
+                </div>
+            </div>
+            <div class="hero-mockup">
+                <div class="mockup-header">
+                    <span class="m-dot r"></span><span class="m-dot y"></span><span class="m-dot g"></span>
+                </div>
+                <div class="mockup-content">
+                    <div class="metric-line">
+                        <span>Requisições Hoje</span>
+                        <strong>+24.810</strong>
+                    </div>
+                    <div class="bar-bg"><div class="bar-val"></div></div>
+                    <div class="terminal-log">
+                        $ flow deploy --cluster-br<br>
+                        &gt; Postgres conectado: OK<br>
+                        &gt; Latência média: 22ms<br>
+                        &gt; Status: 100% Operacional
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="saas-stats" id="metricas">
+        <div class="saas-container stats-grid">
+            <div class="stat-col"><strong>99.98%</strong><span>Disponibilidade</span></div>
+            <div class="stat-col"><strong>&lt; 30ms</strong><span>Latência Média</span></div>
+            <div class="stat-col"><strong>12.000+</strong><span>Devs Ativos</span></div>
+        </div>
+    </section>
+
+    <section class="saas-cards-sec" id="recursos">
+        <div class="saas-container">
+            <div class="sec-title">
+                <h2>Feito para Alta Performance</h2>
+                <p>Infraestrutura distribuída com zero fricção de configuração.</p>
+            </div>
+            <div class="cards-grid">
+                <div class="feature-box">
+                    <span class="ico">⚡</span>
+                    <h3>Latência Ultrabaixa</h3>
+                    <p>Servidores distribuídos em edge para resposta instantânea.</p>
+                </div>
+                <div class="feature-box">
+                    <span class="ico">🛡️</span>
+                    <h3>Segurança Bancária</h3>
+                    <p>Criptografia ponta a ponta e total conformidade com a LGPD.</p>
+                </div>
+                <div class="feature-box">
+                    <span class="ico">📈</span>
+                    <h3>Métricas em Tempo Real</h3>
+                    <p>Dashboards completos com exportação de logs e alertas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="saas-pricing-sec" id="precos">
+        <div class="saas-container">
+            <div class="sec-title">
+                <h2>Planos Claros e Transparentes</h2>
+                <p>Escale conforme sua demanda sem surpresas no fim do mês.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="price-box">
+                    <div>
+                        <h3>Iniciante</h3>
+                        <p class="desc">Para protótipos e testes.</p>
+                        <div class="valor">R$ 29 <span>/mês</span></div>
+                        <ul><li>✓ 5 pipelines ativas</li><li>✓ Suporte comunitário</li></ul>
+                    </div>
+                    <button class="btn-plano">Escolher Plano</button>
+                </div>
+                <div class="price-box destaque">
+                    <span class="tag-dest">MAIS POPULAR</span>
+                    <div>
+                        <h3>Pro</h3>
+                        <p class="desc">Para aplicações em produção.</p>
+                        <div class="valor">R$ 79 <span>/mês</span></div>
+                        <ul><li>✓ Pipelines ilimitadas</li><li>✓ Suporte 24/7 prioritário</li></ul>
+                    </div>
+                    <button class="btn-plano btn-dest">Testar por 14 Dias</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="saas-foot">
+        <div class="saas-container">
+            <p>© 2026 CloudFlow Inc. Todos os direitos reservados. 100% fluido em qualquer tela.</p>
+        </div>
+    </footer>
+</div>`,
+            css: `.saas-page { min-height: 100vh; background: #070c18; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+.saas-container { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+/* HEADER */
+.saas-nav { position: sticky; top: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #334155; z-index: 500; padding: 12px 0; }
+.nav-row { display: flex; justify-content: space-between; align-items: center; }
+.saas-logo { font-weight: 800; font-size: 1.15rem; color: #38bdf8; text-decoration: none; }
+.saas-menu-desk { display: flex; gap: 20px; }
+.saas-menu-desk a { color: #94a3b8; text-decoration: none; font-size: 0.88rem; font-weight: 600; }
+.saas-menu-desk a:hover { color: #38bdf8; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.btn-acesso { background: #0284c7; color: white; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 0.82rem; text-decoration: none; }
+.btn-hamb { display: none; background: transparent; border: 1px solid #334155; color: #f8fafc; padding: 4px 8px; border-radius: 6px; font-size: 1.2rem; cursor: pointer; }
+
+.saas-menu-mob { display: none; flex-direction: column; gap: 10px; padding: 14px 16px; background: #0f172a; border-top: 1px solid #334155; }
+.saas-menu-mob.on { display: flex; }
+.saas-menu-mob a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; font-weight: 600; padding: 4px 0; }
+
+/* HERO */
+.saas-hero { padding: 40px 0 30px; }
+.hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 28px; align-items: center; }
+.badge-versao { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; display: inline-block; margin-bottom: 12px; }
+.hero-info h1 { font-size: clamp(1.5rem, 5vw, 2.4rem); font-weight: 800; line-height: 1.22; margin-bottom: 12px; }
+.hero-info h1 span { background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-info p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.55; }
+.hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+.btn-prim { background: #38bdf8; color: #070c18; padding: 12px 20px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; text-decoration: none; text-align: center; }
+.btn-sec { background: #1e293b; color: #f8fafc; border: 1px solid #334155; padding: 12px 18px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; text-decoration: none; text-align: center; }
+.garantias { display: flex; gap: 12px; font-size: 0.78rem; color: #94a3b8; flex-wrap: wrap; }
+
+.hero-mockup { background: #0f172a; border: 1px solid #334155; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.mockup-header { background: #070c18; padding: 8px 12px; display: flex; gap: 6px; }
+.m-dot { width: 8px; height: 8px; border-radius: 50%; }
+.m-dot.r { background: #ef4444; } .m-dot.y { background: #f59e0b; } .m-dot.g { background: #10b981; }
+.mockup-content { padding: 16px 14px; }
+.metric-line { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 0.8rem; color: #94a3b8; }
+.metric-line strong { font-size: 1.15rem; color: #34d399; }
+.bar-bg { height: 6px; background: #1e293b; border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+.bar-val { width: 92%; height: 100%; background: #38bdf8; }
+.terminal-log { background: #040711; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 8px 10px; font-family: monospace; font-size: 0.72rem; line-height: 1.5; color: #bae6fd; word-break: break-all; }
+
+/* MÉTRICAS */
+.saas-stats { padding: 20px 0; border-top: 1px solid #1e293b; border-bottom: 1px solid #1e293b; background: rgba(15, 23, 42, 0.4); }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+.stat-col strong { display: block; font-size: clamp(1.2rem, 3.5vw, 1.7rem); color: #38bdf8; }
+.stat-col span { font-size: 0.75rem; color: #94a3b8; }
+
+/* FEATURES */
+.saas-cards-sec { padding: 44px 0; }
+.sec-title { text-align: center; max-width: 580px; margin: 0 auto 28px; }
+.sec-title h2 { font-size: clamp(1.3rem, 4vw, 1.8rem); margin-bottom: 6px; }
+.sec-title p { color: #94a3b8; font-size: 0.88rem; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.feature-box { background: #0f172a; border: 1px solid #334155; border-radius: 10px; padding: 18px 14px; }
+.ico { font-size: 1.5rem; margin-bottom: 8px; display: inline-block; }
+.feature-box h3 { font-size: 1rem; margin-bottom: 4px; }
+.feature-box p { color: #94a3b8; font-size: 0.85rem; line-height: 1.45; }
+
+/* PREÇOS */
+.saas-pricing-sec { padding: 30px 0 44px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; max-width: 680px; margin: 0 auto; }
+.price-box { background: #0f172a; border: 2px solid #334155; border-radius: 12px; padding: 22px 16px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+.price-box.destaque { border-color: #38bdf8; box-shadow: 0 8px 24px rgba(56, 189, 248, 0.2); }
+.tag-dest { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #38bdf8; color: #070c18; font-size: 0.65rem; font-weight: 800; padding: 2px 10px; border-radius: 20px; }
+.price-box h3 { font-size: 1.1rem; margin-bottom: 2px; }
+.price-box .desc { color: #94a3b8; font-size: 0.82rem; margin-bottom: 12px; }
+.valor { font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+.valor span { font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
+.price-box ul { list-style: none; margin-bottom: 18px; font-size: 0.85rem; color: #cbd5e1; }
+.price-box ul li { margin-bottom: 6px; }
+.btn-plano { width: 100%; padding: 10px; background: #1e293b; color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
+.btn-dest { background: #38bdf8; color: #070c18; font-weight: 800; }
+
+.saas-foot { border-top: 1px solid #1e293b; padding: 20px 0; text-align: center; font-size: 0.78rem; color: #64748b; }
+
+/* BREAKPOINTS PARA 768px, 375px e 320px */
+@media (max-width: 768px) {
+    .saas-menu-desk { display: none; }
+    .btn-hamb { display: block; }
+    .hero-grid { grid-template-columns: 1fr; gap: 24px; }
+    .hero-info { text-align: center; }
+    .hero-actions { justify-content: center; }
+    .garantias { justify-content: center; }
+}
+
+@media (max-width: 480px) {
+    .saas-container { padding: 0 12px; }
+    .hero-actions { flex-direction: column; width: 100%; }
+    .btn-prim, .btn-sec { width: 100%; }
+    .stats-grid { grid-template-columns: 1fr; gap: 14px; }
+}`,
+            js: `function toggleSaasMenu() {
+    document.getElementById("mobMenu").classList.toggle("on");
+}`
+        },
+        {
+            id: 'grid-ecommerce',
+            nome: 'Landing Page E-commerce em Grid',
+            icone: '🛍️',
+            categoria: '📐 Modelos em Grid',
+            dicas: 'Vitrine comercial com banner principal e grade de produtos responsiva.',
+            html: `<div class="ecom-grid">
+    <header class="ecom-header">
+        <div class="logo">🛍️ LojaDev</div>
+        <div class="carrinho-btn">🛒 Carrinho (2)</div>
+    </header>
+    <section class="ecom-banner">
+        <h2>Coleção Inverno Tech</h2>
+        <p>Acessórios ergonômicos e periféricos com até 40% OFF.</p>
+    </section>
+    <main class="ecom-vitrine">
+        <div class="card-prod"><img src="https://picsum.photos/id/20/300/200" alt=""><h4>Fone Noise Cancelling</h4><span class="preco">R$ 289,90</span><button>Comprar</button></div>
+        <div class="card-prod"><img src="https://picsum.photos/id/26/300/200" alt=""><h4>Smartwatch Tracker</h4><span class="preco">R$ 399,00</span><button>Comprar</button></div>
+        <div class="card-prod"><img src="https://picsum.photos/id/30/300/200" alt=""><h4>Caixa Acústica Bass</h4><span class="preco">R$ 149,90</span><button>Comprar</button></div>
+    </main>
+</div>`,
+            css: `.ecom-grid { min-height: 100vh; background: #f8fafc; color: #0f172a; font-family: system-ui, sans-serif; }
+.ecom-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: white; border-bottom: 1px solid #e2e8f0; }
+.logo { font-weight: 800; font-size: 1.1rem; color: #0284c7; }
+.carrinho-btn { background: #e0f2fe; color: #0284c7; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+.ecom-banner { background: linear-gradient(135deg, #0369a1, #0284c7); color: white; padding: 32px 14px; text-align: center; }
+.ecom-banner h2 { font-size: 1.45rem; margin-bottom: 4px; }
+.ecom-banner p { font-size: 0.88rem; opacity: 0.9; }
+.ecom-vitrine { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 14px; padding: 20px 14px; max-width: 900px; margin: 0 auto; }
+.card-prod { background: white; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; padding-bottom: 12px; text-align: center; }
+.card-prod img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+.card-prod h4 { font-size: 0.92rem; margin: 8px 0 2px; }
+.preco { display: block; font-weight: 800; color: #0284c7; font-size: 1rem; margin-bottom: 8px; }
+.card-prod button { background: #0284c7; color: white; border: none; padding: 7px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }`,
+            js: `// E-commerce responsivo.`
+        },
+        {
+            id: 'grid-institucional',
+            nome: 'Landing Institucional & Agência',
+            icone: '🏢',
+            categoria: '📐 Modelos em Grid',
+            dicas: 'Template institucional com área sobre e grade com números de impacto.',
+            html: `<div class="inst-grid">
+    <header class="inst-hero">
+        <span class="selo">DESDE 2018</span>
+        <h1>Soluções Digitais que Impulsionam Negócios</h1>
+        <p>Ajudamos empresas a estruturarem sua presença online com tecnologia de ponta.</p>
+    </header>
+    <section class="inst-metricas">
+        <div class="m-card"><strong>+350</strong><span>Projetos Entregues</span></div>
+        <div class="m-card"><strong>98%</strong><span>Satisfação de Clientes</span></div>
+        <div class="m-card"><strong>15+</strong><span>Prêmios de Design</span></div>
+    </section>
+</div>`,
+            css: `.inst-grid { min-height: 100vh; background: #0f172a; color: #f8fafc; font-family: system-ui, sans-serif; padding: 20px 14px; }
+.inst-hero { text-align: center; max-width: 680px; margin: 24px auto; }
+.selo { background: rgba(168,85,247,0.2); color: #c084fc; padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; }
+.inst-hero h1 { font-size: clamp(1.4rem, 4vw, 2.2rem); margin: 10px 0; }
+.inst-hero p { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; }
+.inst-metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 12px; max-width: 720px; margin: 24px auto; }
+.m-card { background: #1e293b; padding: 16px; border-radius: 10px; text-align: center; border: 1px solid #334155; }
+.m-card strong { font-size: 1.6rem; color: #38bdf8; display: block; }
+.m-card span { font-size: 0.78rem; color: #94a3b8; }`,
+            js: `// Institucional fluido.`
+        },
+        {
+            id: 'grid-bento',
+            nome: 'Grade Bento Box Moderna',
+            icone: '🍱',
+            categoria: '📐 Modelos em Grid',
+            dicas: 'Layout modular estilo Bento Box com áreas assimétricas em desktop e empilhamento fluido em mobile.',
+            html: `<section class="bento-wrap">
+    <div class="bento-card bento-hero">
+        <span class="tag-b">IA HUB</span>
+        <h2>Motor de Inteligência Artificial</h2>
+        <p>Processe e categorize grandes volumes de dados automaticamente sem atrasos.</p>
+    </div>
+    <div class="bento-card bento-num"><div class="stat">99.9%</div><p>Disponibilidade</p></div>
+    <div class="bento-card bento-cta"><h3>Comece Agora</h3><button>Criar Chave API</button></div>
+</section>`,
+            css: `.bento-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px; max-width: 800px; margin: 16px auto; padding: 12px; font-family: system-ui, sans-serif; }
+.bento-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 18px; color: #f8fafc; }
+.bento-hero { grid-column: span 2; background: linear-gradient(135deg, #1e293b, #0f172a); border-color: #38bdf8; }
+.tag-b { background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; }
+.bento-hero h2 { font-size: 1.3rem; color: #38bdf8; margin: 8px 0; }
+.bento-hero p { color: #94a3b8; font-size: 0.85rem; }
+.bento-num { text-align: center; }
+.stat { font-size: 2rem; font-weight: 800; color: #4ade80; }
+.bento-cta { background: #0284c7; text-align: center; }
+.bento-cta h3 { margin-bottom: 8px; font-size: 1.05rem; }
+.bento-cta button { background: #070c18; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+@media (max-width: 640px) { .bento-hero { grid-column: span 1; } }`,
+            js: `// Bento Grid.`
+        },
+        {
+            id: 'grid-dashboard',
+            nome: 'Dashboard com Painel em Grid',
+            icone: '📊',
+            categoria: '📐 Modelos em Grid',
+            dicas: 'Template administrativo responsivo com menu lateral retrátil em mobile.',
+            html: `<div class="dash-l">
+    <aside class="dash-aside"><strong>⚡ Admin</strong><nav><a href="#" class="on">📈 Visão Geral</a><a href="#">👥 Usuários</a><a href="#">💳 Cobranças</a></nav></aside>
+    <main class="dash-body">
+        <header class="dash-top"><h3>Painel Geral</h3><span>👤 Gestor</span></header>
+        <div class="dash-grid">
+            <div class="kpi"><span>Vendas</span><strong>R$ 38.450</strong></div>
+            <div class="kpi"><span>Usuários</span><strong>1.420</strong></div>
+        </div>
+    </main>
+</div>`,
+            css: `.dash-l { display: grid; grid-template-columns: 190px 1fr; min-height: 100vh; background: #070c18; color: #f8fafc; font-family: system-ui, sans-serif; }
+.dash-aside { background: #0f172a; border-right: 1px solid #334155; padding: 16px 12px; }
+.dash-aside strong { color: #38bdf8; font-size: 1.05rem; display: block; margin-bottom: 16px; }
+.dash-aside a { display: block; color: #94a3b8; text-decoration: none; padding: 8px 10px; border-radius: 6px; font-size: 0.82rem; margin-bottom: 4px; }
+.dash-aside a.on, .dash-aside a:hover { background: #1e293b; color: white; }
+.dash-body { padding: 14px; }
+.dash-top { display: flex; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 16px; font-size: 0.9rem; }
+.dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 12px; }
+.kpi { background: #0f172a; padding: 14px; border-radius: 8px; border: 1px solid #334155; }
+.kpi span { color: #94a3b8; font-size: 0.78rem; }
+.kpi strong { display: block; font-size: 1.25rem; margin-top: 4px; }
+@media (max-width: 640px) { .dash-l { grid-template-columns: 1fr; } .dash-aside { display: none; } }`,
+            js: `// Dashboard responsivo.`
+        },
+
+        // ==================== 🧭 NAVEGAÇÃO ====================
+        {
+            id: 'navbar-fixa',
+            nome: 'Navbar Fixa',
+            icone: '🧭',
+            categoria: '🧭 Navegação',
+            dicas: 'Navbar fluida que ajusta os links sem ocultá-los em celulares de 320px.',
+            html: `<nav class="navbar">
+    <div class="logo">🚀 MeuSite</div>
+    <ul class="menu">
+        <li><a href="#">Início</a></li>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="#">Serviços</a></li>
+        <li><a href="#">Contato</a></li>
+    </ul>
+</nav>
+<div class="conteudo"><h1>Bem-vindo!</h1><p>Role a página para ver a navbar fixa fluida no topo.</p></div>`,
+            css: `.navbar { position: fixed; top: 0; left: 0; width: 100%; background: #1e293b; color: white; display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); z-index: 100; flex-wrap: wrap; gap: 8px; }
+.logo { font-weight: 800; font-size: 1.1rem; }
+.menu { display: flex; list-style: none; gap: 14px; flex-wrap: wrap; }
+.menu a { color: white; text-decoration: none; font-weight: 600; font-size: 0.88rem; }
+.menu a:hover { color: #38bdf8; }
+.conteudo { padding: 90px 16px 40px; text-align: center; }
+.conteudo h1 { color: #1e293b; margin-bottom: 8px; }
+.conteudo p { color: #64748b; font-size: 0.9rem; }
+@media (max-width: 480px) { .navbar { justify-content: center; padding: 10px 12px; } .menu { justify-content: center; gap: 10px; font-size: 0.82rem; } }`,
+            js: `// Sem JS necessário.`
+        },
+        {
+            id: 'navbar-hamburger',
+            nome: 'Navbar com Menu Hamburger',
+            icone: '🍔',
+            categoria: '🧭 Navegação',
+            dicas: 'Menu mobile deslizante sem estouro horizontal.',
+            html: `<nav class="navbar-h">
+    <div class="logo">🚀 MeuSite</div>
+    <button class="hamburger" onclick="toggleNav()">☰</button>
+    <ul class="menu-h" id="menuH">
+        <li><a href="#">Início</a></li>
+        <li><a href="#">Sobre</a></li>
+        <li><a href="#">Serviços</a></li>
+        <li><a href="#">Contato</a></li>
+    </ul>
+</nav>
+<div style="padding: 70px 14px; text-align: center;"><h1>Menu Hamburger</h1><p style="color:#64748b;">Clique em ☰ para abrir o menu.</p></div>`,
+            css: `.navbar-h { position: fixed; top: 0; left: 0; width: 100%; background: #7c3aed; color: white; display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; z-index: 100; }
+.logo { font-weight: 800; font-size: 1.1rem; }
+.hamburger { background: transparent; border: none; color: white; font-size: 1.4rem; cursor: pointer; display: none; }
+.menu-h { display: flex; list-style: none; gap: 18px; }
+.menu-h a { color: white; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+@media (max-width: 600px) {
+    .hamburger { display: block; }
+    .menu-h { position: fixed; top: 48px; left: 0; flex-direction: column; background: #7c3aed; width: 100%; padding: 18px; transform: translateY(-200%); transition: transform 0.3s; gap: 14px; }
+    .menu-h.aberto { transform: translateY(0); }
+}`,
+            js: `function toggleNav() { document.getElementById("menuH").classList.toggle("aberto"); }`
+        },
+        {
+            id: 'btn-voltar-topo-comp',
+            nome: 'Botão Voltar ao Topo',
+            icone: '⬆️',
+            categoria: '🧭 Navegação',
+            dicas: 'Rolagem suave até o elemento com id="inicio".',
+            html: `<div id="inicio"></div>
+<div style="padding: 24px 14px; text-align:center;">
+    <h2>Role para baixo 👇</h2>
+    <p style="color:#64748b;">O botão surge após rolar 100px.</p>
+    <div style="height: 600px; display:flex; align-items:center; justify-content:center; color:#94a3b8;">(Role aqui)</div>
+</div>
+<button class="btn-subir oculto" id="btnSubir" onclick="subirAoInicio()">⬆️</button>`,
+            css: `html { scroll-behavior: smooth; }
+.btn-subir { position: fixed; bottom: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: #7c3aed; color: white; border: none; font-size: 1.2rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+.btn-subir.oculto { opacity: 0; pointer-events: none; transform: scale(0.6); }`,
+            js: `function subirAoInicio() { document.getElementById("inicio").scrollIntoView({ behavior: "smooth" }); }
+window.addEventListener("scroll", () => {
+    const btn = document.getElementById("btnSubir");
+    if (window.scrollY > 100) btn.classList.remove("oculto"); else btn.classList.add("oculto");
+});`
+        },
+        {
+            id: 'breadcrumb',
+            nome: 'Breadcrumb (Trilha)',
+            icone: '🔗',
+            categoria: '🧭 Navegação',
+            dicas: 'Caminho de navegação responsivo com quebra fluida.',
+            html: `<nav class="breadcrumb"><a href="#">🏠 Início</a><span>/</span><a href="#">Produtos</a><span>/</span><span class="atual">Fone Bluetooth</span></nav>`,
+            css: `.breadcrumb { padding: 12px 14px; background: #f8fafc; border-radius: 8px; margin: 16px; display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.85rem; }
+.breadcrumb a { color: #7c3aed; text-decoration: none; font-weight: 700; }
+.breadcrumb span { color: #94a3b8; }
+.breadcrumb .atual { color: #334155; font-weight: 700; }`,
+            js: `// Breadcrumb estático.`
+        },
+        {
+            id: 'tabs',
+            nome: 'Tabs (Abas)',
+            icone: '📑',
+            categoria: '🧭 Navegação',
+            dicas: 'Alternador de abas de conteúdo dinâmico.',
+            html: `<div class="tabs">
+    <div class="tabs-header">
+        <button class="tab ativa" onclick="abrirTab(this, 't1')">Perfil</button>
+        <button class="tab" onclick="abrirTab(this, 't2')">Ajustes</button>
+    </div>
+    <div class="tab-corpo ativa" id="t1"><h4>👤 Seus Dados</h4><p>Edite suas informações cadastrais.</p></div>
+    <div class="tab-corpo" id="t2"><h4>⚙️ Preferências</h4><p>Ajuste temas e segurança.</p></div>
+</div>`,
+            css: `.tabs { max-width: 440px; margin: 20px auto; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+.tabs-header { display: flex; background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+.tab { flex: 1; padding: 12px; background: transparent; border: none; font-weight: 700; font-size: 0.85rem; color: #64748b; cursor: pointer; }
+.tab.ativa { color: #7c3aed; border-bottom: 3px solid #7c3aed; background: white; }
+.tab-corpo { display: none; padding: 18px; color: #475569; font-size: 0.9rem; }
+.tab-corpo.ativa { display: block; }`,
+            js: `function abrirTab(btn, id) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("ativa"));
+    document.querySelectorAll(".tab-corpo").forEach(c => c.classList.remove("ativa"));
+    btn.classList.add("ativa");
+    document.getElementById(id).classList.add("ativa");
+}`
+        },
+
+        // ==================== 🦸 DESTAQUES (HERO/CTA) ====================
+        {
+            id: 'hero-simples',
+            nome: 'Hero Simples',
+            icone: '🎯',
+            categoria: '🦸 Destaques',
+            dicas: 'Seção de destaque inicial de alto impacto.',
+            html: `<section class="hero-s"><h1>Cresça seu Negócio Digital</h1><p>Soluções modernas e escaláveis para seu público.</p><button>Iniciar Agora</button></section>`,
+            css: `.hero-s { background: linear-gradient(135deg, #7c3aed, #ec4899); color: white; padding: 60px 16px; text-align: center; }
+.hero-s h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); margin-bottom: 10px; }
+.hero-s p { font-size: 0.95rem; margin-bottom: 20px; opacity: 0.95; }
+.hero-s button { padding: 12px 26px; background: white; color: #7c3aed; border: none; border-radius: 24px; font-weight: 800; cursor: pointer; }`,
+            js: `// Hero simples.`
+        },
+        {
+            id: 'hero-imagem',
+            nome: 'Hero com Imagem',
+            icone: '🖼️',
+            categoria: '🦸 Destaques',
+            dicas: 'Banner com overlay escurecido sobre imagem de fundo.',
+            html: `<section class="hero-img"><div class="overlay"><h1>Novos Horizontes</h1><p>Descubra os destinos mais procurados para 2026.</p><button>Ver Pacotes</button></div></section>`,
+            css: `.hero-img { min-height: 320px; background: url('https://picsum.photos/id/1015/800/400') center/cover; border-radius: 14px; margin: 16px; overflow: hidden; display: flex; }
+.overlay { background: rgba(0,0,0,0.55); color: white; padding: 30px 16px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.overlay h1 { font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 8px; }
+.overlay p { font-size: 0.9rem; margin-bottom: 18px; }
+.overlay button { padding: 10px 22px; background: #a855f7; color: white; border: none; border-radius: 20px; font-weight: 700; cursor: pointer; }`,
+            js: `// Hero com imagem.`
+        },
+        {
+            id: 'hero-form',
+            nome: 'Hero com Formulário',
+            icone: '📝',
+            categoria: '🦸 Destaques',
+            dicas: 'Padding reduzido para 16px em telas compactas, sem vazar a tela lateralmente.',
+            html: `<section class="h-form"><div class="h-card"><h2>Receba nosso eBook</h2><p>Dicas práticas de desenvolvimento web.</p><form onsubmit="event.preventDefault(); alert('Enviado com sucesso!');"><input type="text" placeholder="Seu nome" required><input type="email" placeholder="seu@email.com" required><button type="submit">BAIXAR GRÁTIS</button></form></div></section>`,
+            css: `.h-form { background: linear-gradient(135deg, #1e1b4b, #7c3aed); padding: 40px 14px; display: flex; justify-content: center; }
+.h-card { background: white; padding: 26px 18px; border-radius: 14px; width: 100%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.h-card h2 { color: #1e293b; font-size: 1.35rem; margin-bottom: 4px; }
+.h-card p { color: #64748b; font-size: 0.85rem; margin-bottom: 16px; }
+.h-card input { width: 100%; padding: 11px 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; font-size: 0.88rem; }
+.h-card button { width: 100%; padding: 12px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }`,
+            js: `// Hero form.`
+        },
+        {
+            id: 'cta',
+            nome: 'CTA (Call to Action)',
+            icone: '📣',
+            categoria: '🦸 Destaques',
+            dicas: 'Bloco vibrante para conversão de leads.',
+            html: `<section class="cta-box"><h2>Pronto para Começar?</h2><p>Cadastre-se hoje mesmo e aproveite 30 dias grátis.</p><button>Criar Minha Conta</button></section>`,
+            css: `.cta-box { background: linear-gradient(135deg, #ec4899, #f59e0b); padding: 40px 16px; border-radius: 14px; margin: 16px; text-align: center; color: white; }
+.cta-box h2 { font-size: 1.6rem; margin-bottom: 8px; }
+.cta-box p { font-size: 0.95rem; margin-bottom: 18px; }
+.cta-box button { padding: 12px 28px; background: white; color: #ec4899; border: none; border-radius: 24px; font-weight: 800; cursor: pointer; }`,
+            js: `// CTA estático.`
+        },
+
+        // ==================== 👋 SEÇÕES DE SITE ====================
+        {
+            id: 'boas-vindas',
+            nome: 'Boas-Vindas',
+            icone: '👋',
+            categoria: '👋 Seções de Site',
+            dicas: 'Utiliza min-width: 0 para evitar travamento em 320px.',
+            html: `<section class="bv-sec"><div class="bv-txt"><span class="tag">BEM-VINDO</span><h1>Criamos soluções que conectam marcas</h1><p>Equipe focada em resultados e interfaces intuitivas.</p></div><div class="bv-img"><img src="https://picsum.photos/id/1005/400/300" alt=""></div></section>`,
+            css: `.bv-sec { display: flex; gap: 20px; align-items: center; padding: 40px 16px; max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
+.bv-txt, .bv-img { flex: 1 1 min(100%, 280px); min-width: 0; }
+.tag { background: #ede9fe; color: #7c3aed; padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; }
+.bv-txt h1 { font-size: clamp(1.4rem, 4vw, 2rem); color: #1e293b; margin: 10px 0; }
+.bv-txt p { color: #64748b; font-size: 0.9rem; }
+.bv-img img { width: 100%; border-radius: 12px; }`,
+            js: `// Seção de boas-vindas.`
+        },
+        {
+            id: 'sobre',
+            nome: 'Sobre',
+            icone: '💡',
+            categoria: '👋 Seções de Site',
+            dicas: 'Apresentação institucional fluida.',
+            html: `<section class="sobre-sec"><div class="sobre-img"><img src="https://picsum.photos/id/1011/400/300" alt=""></div><div class="sobre-txt"><h2>Nossa Trajetória</h2><p>Desde 2018 entregando software de alto valor agregado.</p><ul><li>✅ Suporte Dedicado</li><li>✅ Código Limpo</li></ul></div></section>`,
+            css: `.sobre-sec { display: flex; gap: 20px; align-items: center; padding: 40px 16px; max-width: 900px; margin: 0 auto; flex-wrap: wrap-reverse; }
+.sobre-img, .sobre-txt { flex: 1 1 min(100%, 280px); min-width: 0; }
+.sobre-img img { width: 100%; border-radius: 12px; }
+.sobre-txt h2 { font-size: 1.5rem; color: #1e293b; margin-bottom: 8px; }
+.sobre-txt p { color: #64748b; font-size: 0.9rem; margin-bottom: 12px; }
+.sobre-txt ul { list-style: none; color: #334155; font-size: 0.88rem; font-weight: 600; }`,
+            js: `// Seção sobre.`
+        },
+        {
+            id: 'beneficios',
+            nome: 'Benefícios',
+            icone: '⭐',
+            categoria: '👋 Seções de Site',
+            dicas: 'Grade com auto-fit e quebra suave.',
+            html: `<section class="ben-sec"><h2>Por que Nós?</h2><div class="ben-grid"><div class="ben"><span>⚡</span><h3>Rápido</h3><p>Projetos no prazo.</p></div><div class="ben"><span>🛡️</span><h3>Seguro</h3><p>Dados protegidos.</p></div><div class="ben"><span>💎</span><h3>Premium</h3><p>Design moderno.</p></div></div></section>`,
+            css: `.ben-sec { padding: 40px 16px; text-align: center; }
+.ben-sec h2 { color: #1e293b; margin-bottom: 20px; font-size: 1.5rem; }
+.ben-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 14px; max-width: 800px; margin: 0 auto; }
+.ben { background: white; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; }
+.ben span { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+.ben h3 { font-size: 1rem; color: #1e293b; margin-bottom: 4px; }
+.ben p { color: #64748b; font-size: 0.85rem; }`,
+            js: `// Benefícios.`
+        },
+        {
+            id: 'servicos',
+            nome: 'Serviços',
+            icone: '🛠️',
+            categoria: '👋 Seções de Site',
+            dicas: 'Cards de catálogo de serviços.',
+            html: `<section class="serv-sec"><h2>Serviços</h2><div class="serv-grid"><div class="serv"><h3>🎨 Design UI/UX</h3><p>Prototipagem no Figma.</p></div><div class="serv"><h3>💻 Front-end</h3><p>Interfaces web responsivas.</p></div></div></section>`,
+            css: `.serv-sec { padding: 40px 16px; background: #f8fafc; text-align: center; }
+.serv-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.serv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; max-width: 700px; margin: 0 auto; }
+.serv { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.serv h3 { color: #7c3aed; margin-bottom: 6px; }
+.serv p { color: #64748b; font-size: 0.88rem; }`,
+            js: `// Serviços.`
+        },
+        {
+            id: 'produtos',
+            nome: 'Produtos',
+            icone: '📦',
+            categoria: '👋 Seções de Site',
+            dicas: 'Card de exibição com imagem e preço.',
+            html: `<section class="prod-sec"><h2>Produtos</h2><div class="prod-grid"><div class="prod"><img src="https://picsum.photos/id/20/300/200" alt=""><h4>Fone Sem Fio</h4><span class="v">R$ 99,90</span><button>Comprar</button></div></div></section>`,
+            css: `.prod-sec { padding: 40px 16px; text-align: center; }
+.prod-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.prod-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 16px; max-width: 600px; margin: 0 auto; }
+.prod { background: white; border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; padding-bottom: 14px; }
+.prod img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+.prod h4 { margin: 10px 0 4px; font-size: 0.95rem; }
+.v { font-weight: 800; color: #7c3aed; display: block; margin-bottom: 10px; }
+.prod button { background: #7c3aed; color: white; border: none; padding: 6px 16px; border-radius: 16px; font-weight: 700; cursor: pointer; }`,
+            js: `// Produtos.`
+        },
+        {
+            id: 'precos',
+            nome: 'Preços (Sem Quebra)',
+            icone: '💰',
+            categoria: '👋 Seções de Site',
+            dicas: 'Desativa o transform: scale em mobile para não vazar a tela lateralmente.',
+            html: `<section class="pr-sec"><h2>Planos</h2><div class="pr-grid"><div class="pr"><h3>Básico</h3><div class="val">R$ 19<span>/mês</span></div><button>Assinar</button></div><div class="pr dest"><span class="pop">POPULAR</span><h3>Pro</h3><div class="val">R$ 49<span>/mês</span></div><button class="b-dest">Assinar</button></div></div></section>`,
+            css: `.pr-sec { padding: 40px 16px; text-align: center; background: #f8fafc; }
+.pr-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.pr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 16px; max-width: 580px; margin: 0 auto; }
+.pr { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 22px 16px; position: relative; }
+.pr.dest { border-color: #7c3aed; box-shadow: 0 8px 20px rgba(124,58,237,0.15); transform: scale(1.02); }
+.pop { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #7c3aed; color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 800; }
+.val { font-size: 1.8rem; font-weight: 800; color: #7c3aed; margin: 10px 0; }
+.val span { font-size: 0.85rem; color: #94a3b8; }
+.pr button { width: 100%; padding: 10px; background: #e2e8f0; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.b-dest { background: #7c3aed !important; color: white; }
+@media (max-width: 640px) { .pr.dest { transform: none; } }`,
+            js: `// Preços.`
+        },
+        {
+            id: 'equipe',
+            nome: 'Equipe',
+            icone: '👥',
+            categoria: '👋 Seções de Site',
+            dicas: 'Membros da equipe com fotos redondas.',
+            html: `<section class="eq-sec"><h2>Nossa Equipe</h2><div class="eq-grid"><div class="m"><img src="https://i.pravatar.cc/120?img=12" alt=""><h4>Ana Silva</h4><p>Designer</p></div><div class="m"><img src="https://i.pravatar.cc/120?img=33" alt=""><h4>Bruno Costa</h4><p>Dev</p></div></div></section>`,
+            css: `.eq-sec { padding: 40px 16px; text-align: center; }
+.eq-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.eq-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 14px; max-width: 500px; margin: 0 auto; }
+.m { background: white; padding: 16px; border: 2px solid #e2e8f0; border-radius: 12px; }
+.m img { width: 70px; height: 70px; border-radius: 50%; margin-bottom: 8px; }
+.m h4 { font-size: 0.95rem; }
+.m p { color: #7c3aed; font-size: 0.8rem; font-weight: 700; }`,
+            js: `// Equipe.`
+        },
+        {
+            id: 'depoimentos',
+            nome: 'Depoimentos',
+            icone: '💬',
+            categoria: '👋 Seções de Site',
+            dicas: 'Depoimentos com citação e avatar.',
+            html: `<section class="dep-sec"><h2>Avaliações</h2><div class="dep-grid"><div class="dep"><p>"Serviço excelente e atendimento nota dez!"</p><strong>Carla M.</strong></div><div class="dep"><p>"Entrega rápida e design super moderno."</p><strong>Lucas R.</strong></div></div></section>`,
+            css: `.dep-sec { padding: 40px 16px; background: #f8fafc; text-align: center; }
+.dep-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.dep-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px; max-width: 680px; margin: 0 auto; }
+.dep { background: white; padding: 18px; border: 2px solid #e2e8f0; border-radius: 12px; text-align: left; }
+.dep p { font-style: italic; color: #475569; font-size: 0.88rem; margin-bottom: 10px; }
+.dep strong { color: #1e293b; font-size: 0.85rem; }`,
+            js: `// Depoimentos.`
+        },
+        {
+            id: 'estatisticas',
+            nome: 'Estatísticas',
+            icone: '📊',
+            categoria: '👋 Seções de Site',
+            dicas: 'Números de impacto com tipografia fluida.',
+            html: `<section class="estat-sec"><div class="est"><strong>+10k</strong><span>Clientes</span></div><div class="est"><strong>99%</strong><span>Satisfação</span></div><div class="est"><strong>24/7</strong><span>Suporte</span></div></section>`,
+            css: `.estat-sec { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: 14px; padding: 36px 16px; background: linear-gradient(135deg, #1e1b4b, #7c3aed); color: white; text-align: center; }
+.est strong { font-size: clamp(1.6rem, 5vw, 2.2rem); color: #fbbf24; display: block; }
+.est span { font-size: 0.85rem; opacity: 0.9; }`,
+            js: `// Estatísticas.`
+        },
+        {
+            id: 'app',
+            nome: 'Seção App',
+            icone: '📱',
+            categoria: '👋 Seções de Site',
+            dicas: 'Chamada para download com botões de lojas.',
+            html: `<section class="app-sec"><div class="app-txt"><h2>Baixe Nosso App</h2><p>Controle tudo na palma da mão.</p><div class="app-btns"><button>📱 Android</button><button>🍎 iOS</button></div></div></section>`,
+            css: `.app-sec { padding: 40px 16px; background: #f8fafc; text-align: center; }
+.app-txt h2 { color: #1e293b; margin-bottom: 8px; }
+.app-txt p { color: #64748b; font-size: 0.9rem; margin-bottom: 16px; }
+.app-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.app-btns button { padding: 10px 16px; background: #1e293b; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }`,
+            js: `// Seção app.`
+        },
+        {
+            id: 'faq',
+            nome: 'FAQ (Sanfona)',
+            icone: '❓',
+            categoria: '👋 Seções de Site',
+            dicas: 'Perguntas frequentes expansíveis.',
+            html: `<section class="faq-sec"><h2>FAQ</h2><div class="faq-i"><button onclick="this.parentElement.classList.toggle('on')">Como funciona o pagamento? <span>▼</span></button><p>Aceitamos Pix, cartão de crédito e boleto bancário.</p></div></section>`,
+            css: `.faq-sec { padding: 40px 16px; max-width: 500px; margin: 0 auto; text-align: center; }
+.faq-sec h2 { color: #1e293b; margin-bottom: 18px; }
+.faq-i { background: white; border: 2px solid #e2e8f0; border-radius: 10px; margin-bottom: 8px; overflow: hidden; text-align: left; }
+.faq-i button { width: 100%; padding: 14px 16px; background: transparent; border: none; font-weight: 700; display: flex; justify-content: space-between; cursor: pointer; color: #1e293b; }
+.faq-i p { display: none; padding: 0 16px 14px; color: #64748b; font-size: 0.88rem; }
+.faq-i.on p { display: block; }`,
+            js: `// FAQ sanfona.`
+        },
+        {
+            id: 'localizacao',
+            nome: 'Localização',
+            icone: '📍',
+            categoria: '👋 Seções de Site',
+            dicas: 'Endereço e mapa responsivo integrado.',
+            html: `<section class="loc-sec"><div><h3>📍 Onde Estamos</h3><p>Rua Exemplo, 100 - Centro</p><p>contato@empresa.com</p></div></section>`,
+            css: `.loc-sec { padding: 40px 16px; text-align: center; background: white; border: 1px solid #e2e8f0; border-radius: 12px; margin: 16px; }
+.loc-sec h3 { color: #1e293b; margin-bottom: 8px; }
+.loc-sec p { color: #64748b; font-size: 0.9rem; }`,
+            js: `// Localização.`
+        },
+        {
+            id: 'blog',
+            nome: 'Blog',
+            icone: '📰',
+            categoria: '👋 Seções de Site',
+            dicas: 'Postagens de blog em cards com imagens.',
+            html: `<section class="blog-sec"><h2>Blog</h2><div class="b-grid"><article class="b-post"><img src="https://picsum.photos/id/180/300/180" alt=""><div><span>10/03/2026</span><h4>Dicas de CSS Moderno</h4><a href="#">Ler mais →</a></div></article></div></section>`,
+            css: `.blog-sec { padding: 40px 16px; text-align: center; }
+.blog-sec h2 { color: #1e293b; margin-bottom: 20px; }
+.b-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 14px; max-width: 600px; margin: 0 auto; }
+.b-post { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; text-align: left; }
+.b-post img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.b-post div { padding: 14px; }
+.b-post span { color: #94a3b8; font-size: 0.75rem; }
+.b-post h4 { color: #1e293b; margin: 4px 0 8px; }
+.b-post a { color: #7c3aed; text-decoration: none; font-weight: 700; font-size: 0.85rem; }`,
+            js: `// Blog.`
+        },
+        {
+            id: 'redes-sociais',
+            nome: 'Redes Sociais',
+            icone: '🔗',
+            categoria: '👋 Seções de Site',
+            dicas: 'Chips de links para redes externas.',
+            html: `<section class="redes-sec"><h2>Siga Nossas Redes</h2><div class="r-list"><a href="#" style="background:#1DA1F2;">Twitter</a><a href="#" style="background:#E1306C;">Instagram</a><a href="#" style="background:#25D366;">WhatsApp</a></div></section>`,
+            css: `.redes-sec { padding: 40px 16px; text-align: center; }
+.redes-sec h2 { color: #1e293b; margin-bottom: 16px; }
+.r-list { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.r-list a { padding: 10px 18px; color: white; text-decoration: none; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }`,
+            js: `// Redes sociais.`
+        },
+
+        // ==================== 📦 CONTEÚDO ====================
+        {
+            id: 'card-simples',
+            nome: 'Card Simples',
+            icone: '🗂️',
+            categoria: '📦 Conteúdo',
+            dicas: 'Card básico para textos com botão de ação.',
+            html: `<div class="card-s"><h3>Card Simples</h3><p>Estrutura limpa e funcional para cartões.</p><button>Ver Mais</button></div>`,
+            css: `.card-s { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 20px; max-width: 300px; margin: 20px auto; }
+.card-s h3 { color: #1e293b; margin-bottom: 6px; }
+.card-s p { color: #64748b; font-size: 0.88rem; margin-bottom: 14px; }
+.card-s button { background: #7c3aed; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; }`,
+            js: `// Card simples.`
+        },
+        {
+            id: 'grid-cards',
+            nome: 'Grid de Cards',
+            icone: '▦',
+            categoria: '📦 Conteúdo',
+            dicas: 'Grade de cartões perfeitamente responsiva.',
+            html: `<div class="g-cards"><div class="gc"><h3>🎨 Design</h3><p>Projetos visuais.</p></div><div class="gc"><h3>⚙️ Backend</h3><p>APIs robustas.</p></div></div>`,
+            css: `.g-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 14px; padding: 20px 14px; max-width: 600px; margin: 0 auto; }
+.gc { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 18px; }
+.gc h3 { color: #7c3aed; margin-bottom: 4px; font-size: 1rem; }
+.gc p { color: #64748b; font-size: 0.85rem; }`,
+            js: `// Grid cards.`
+        },
+        {
+            id: 'accordion',
+            nome: 'Accordion (Sanfona)',
+            icone: '🎛️',
+            categoria: '📦 Conteúdo',
+            dicas: 'Lista de tópicos sanfonada.',
+            html: `<div class="acc-wrap"><div class="acc-it"><button onclick="this.parentElement.classList.toggle('aberto')">HTML5 Semântico <span>▼</span></button><div><p>Tags que dão sentido ao código.</p></div></div></div>`,
+            css: `.acc-wrap { max-width: 440px; margin: 20px auto; padding: 0 14px; }
+.acc-it { background: white; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.acc-it button { width: 100%; padding: 14px; background: transparent; border: none; font-weight: 700; display: flex; justify-content: space-between; cursor: pointer; color: #1e293b; }
+.acc-it div { display: none; padding: 0 14px 12px; color: #64748b; font-size: 0.88rem; }
+.acc-it.aberto div { display: block; }`,
+            js: `// Accordion.`
+        },
+        {
+            id: 'tabela-responsiva',
+            nome: 'Tabela Responsiva Blindada',
+            icone: '📊',
+            categoria: '📦 Conteúdo',
+            dicas: 'Não empurra a página mesmo em 320px devido ao wrapper com rolagem horizontal touch.',
+            html: `<div class="t-wrap"><table class="t"><thead><tr><th>Item</th><th>Qtd</th><th>Preço</th></tr></thead><tbody><tr><td>Teclado</td><td>10</td><td>R$ 150</td></tr><tr><td>Mouse</td><td>25</td><td>R$ 80</td></tr></tbody></table></div>`,
+            css: `.t-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 20px auto; max-width: 500px; }
+.t { width: 100%; border-collapse: collapse; min-width: 280px; font-size: 0.85rem; }
+.t th { background: #7c3aed; color: white; padding: 10px 12px; text-align: left; }
+.t td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }`,
+            js: `// Tabela segura.`
+        },
+        {
+            id: 'lista-imagem',
+            nome: 'Lista com Imagem e Texto',
+            icone: '📋',
+            categoria: '📦 Conteúdo',
+            dicas: 'Listagem de itens com fotos circulares.',
+            html: `<div class="list-wrap"><div class="li-item"><img src="https://i.pravatar.cc/50?img=12" alt=""><div><strong>Ana Silva</strong><small>Online agora</small></div></div></div>`,
+            css: `.list-wrap { max-width: 400px; margin: 20px auto; padding: 0 14px; }
+.li-item { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+.li-item img { width: 42px; height: 42px; border-radius: 50%; }
+.li-item strong { display: block; font-size: 0.9rem; color: #1e293b; }
+.li-item small { color: #10b981; font-size: 0.78rem; font-weight: 700; }`,
+            js: `// Lista imagem.`
+        },
+        {
+            id: 'timeline',
+            nome: 'Timeline (Linha do Tempo)',
+            icone: '📅',
+            categoria: '📦 Conteúdo',
+            dicas: 'Histórico com marcadores ordenados.',
+            html: `<div class="tl"><div class="tl-i"><span>2024</span><h4>Criação</h4><p>Início dos testes do projeto.</p></div><div class="tl-i"><span>2026</span><h4>Lançamento</h4><p>Abertura do acesso global.</p></div></div>`,
+            css: `.tl { max-width: 440px; margin: 20px auto; padding: 0 16px; }
+.tl-i { border-left: 3px solid #7c3aed; padding-left: 14px; margin-bottom: 16px; position: relative; }
+.tl-i span { color: #7c3aed; font-weight: 800; font-size: 0.78rem; }
+.tl-i h4 { font-size: 0.95rem; color: #1e293b; margin: 2px 0; }
+.tl-i p { color: #64748b; font-size: 0.85rem; }`,
+            js: `// Timeline.`
+        },
+        {
+            id: 'galeria',
+            nome: 'Galeria de Imagens (Fluida)',
+            icone: '🖼️',
+            categoria: '📦 Conteúdo',
+            dicas: '2 colunas mesmo em 320px sem ultrapassar a largura do visor.',
+            html: `<div class="gal-wrap"><img src="https://picsum.photos/id/1015/300/300" alt=""><img src="https://picsum.photos/id/1016/300/300" alt=""><img src="https://picsum.photos/id/1018/300/300" alt=""><img src="https://picsum.photos/id/1020/300/300" alt=""></div>`,
+            css: `.gal-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); gap: 6px; padding: 14px; max-width: 600px; margin: 0 auto; }
+.gal-wrap img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+@media (max-width: 360px) { .gal-wrap { grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 8px; } }`,
+            js: `// Galeria fluida.`
+        },
+
+        // ==================== ⚙️ INTERATIVOS ====================
+        {
+            id: 'fab',
+            nome: 'FAB (Botão Flutuante)',
+            icone: '➕',
+            categoria: '⚙️ Interativos',
+            dicas: 'Botão de ação rápida no canto inferior.',
+            html: `<button class="fab" onclick="alert('Ação rápida acionada!')">＋</button>`,
+            css: `.fab { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: #7c3aed; color: white; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 6px 16px rgba(124,58,237,0.4); }`,
+            js: `// FAB.`
+        },
+        {
+            id: 'modal',
+            nome: 'Modal (Pop-up)',
+            icone: '🪟',
+            categoria: '⚙️ Interativos',
+            dicas: 'Janela modal centralizada com backdrop.',
+            html: `<div style="text-align:center; padding:30px;"><button onclick="document.getElementById('mFundo').classList.add('on')">Abrir Modal</button></div>
+<div class="m-fundo" id="mFundo"><div class="m-box"><h3>Confirmação</h3><p>Deseja salvar as configurações?</p><button onclick="document.getElementById('mFundo').classList.remove('on')">Fechar</button></div></div>`,
+            css: `.m-fundo { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 14px; z-index: 999; }
+.m-fundo.on { display: flex; }
+.m-box { background: white; padding: 22px; border-radius: 12px; width: 100%; max-width: 340px; text-align: center; }
+.m-box h3 { margin-bottom: 6px; color: #1e293b; }
+.m-box p { color: #64748b; font-size: 0.88rem; margin-bottom: 16px; }
+.m-box button { background: #7c3aed; color: white; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; }`,
+            js: `// Modal interativo.`
+        },
+        {
+            id: 'snackbar',
+            nome: 'Snackbar (Notificação)',
+            icone: '🍫',
+            categoria: '⚙️ Interativos',
+            dicas: 'Aviso temporário que surge na parte inferior.',
+            html: `<div style="text-align:center; padding:30px;"><button onclick="mostrarSnack()">Avisar</button></div><div class="snack" id="snackBox">✅ Alterações salvas!</div>`,
+            css: `.snack { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: white; padding: 10px 18px; border-radius: 8px; font-size: 0.85rem; transition: transform 0.3s; z-index: 999; }
+.snack.on { transform: translateX(-50%) translateY(0); }`,
+            js: `function mostrarSnack() {
+    const s = document.getElementById("snackBox");
+    s.classList.add("on");
+    setTimeout(() => s.classList.remove("on"), 2500);
+}`
+        },
+        {
+            id: 'carrossel',
+            nome: 'Carrossel de Imagens',
+            icone: '🎠',
+            categoria: '⚙️ Interativos',
+            dicas: 'Imagem com aspect-ratio 16/9 sem distorções em telas estreitas.',
+            html: `<div class="car"><img id="imgSlide" src="https://picsum.photos/id/1015/600/340" alt=""><div class="car-b"><button onclick="mudar(-1)">‹</button><button onclick="mudar(1)">›</button></div></div>`,
+            css: `.car { max-width: 500px; margin: 20px auto; position: relative; border-radius: 12px; overflow: hidden; }
+.car img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.car-b { position: absolute; inset: 0; display: flex; justify-content: space-between; align-items: center; padding: 10px; }
+.car-b button { background: rgba(0,0,0,0.5); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }`,
+            js: `const imgs = ["https://picsum.photos/id/1015/600/340", "https://picsum.photos/id/1016/600/340"];
+let i = 0;
+function mudar(d) { i = (i + d + imgs.length) % imgs.length; document.getElementById("imgSlide").src = imgs[i]; }`
+        },
+        {
+            id: 'menu-lateral',
+            nome: 'Menu Lateral Deslizante',
+            icone: '☰',
+            categoria: '⚙️ Interativos',
+            dicas: 'Gaveta lateral retrátil com overlay.',
+            html: `<div style="text-align:center; padding:20px;"><button onclick="document.getElementById('mGav').classList.add('on')">Abrir Gaveta</button></div>
+<div class="gaveta" id="mGav"><h3>Menu</h3><a href="#">Início</a><a href="#">Perfil</a><button onclick="document.getElementById('mGav').classList.remove('on')">Fechar</button></div>`,
+            css: `.gaveta { position: fixed; top: 0; left: -260px; width: min(80vw, 250px); height: 100vh; background: #1e1b4b; color: white; padding: 20px; transition: left 0.3s; z-index: 1000; }
+.gaveta.on { left: 0; }
+.gaveta a { display: block; color: white; text-decoration: none; padding: 8px 0; border-bottom: 1px solid #312e81; font-size: 0.9rem; }
+.gaveta button { margin-top: 20px; padding: 6px 14px; background: #7c3aed; color: white; border: none; border-radius: 6px; cursor: pointer; }`,
+            js: `// Menu gaveta.`
+        },
+        {
+            id: 'spotlight',
+            nome: 'Spotlight (Destaque)',
+            icone: '🔦',
+            categoria: '⚙️ Interativos',
+            dicas: 'Destaque visual com box-shadow amplo.',
+            html: `<div style="padding: 40px 14px; text-align: center;"><div class="spot"><h3>Foco Central</h3><p>Este elemento tem atenção total na tela.</p></div></div>`,
+            css: `.spot { background: white; padding: 22px; border-radius: 12px; max-width: 320px; margin: 0 auto; box-shadow: 0 0 0 3px #7c3aed, 0 0 0 9999px rgba(0,0,0,0.6); position: relative; z-index: 2; }
+.spot h3 { color: #7c3aed; margin-bottom: 4px; }
+.spot p { color: #64748b; font-size: 0.88rem; }`,
+            js: `// Spotlight.`
+        },
+        {
+            id: 'tooltip',
+            nome: 'Tooltip',
+            icone: '💬',
+            categoria: '⚙️ Interativos',
+            dicas: 'Dica contextual acionada por hover.',
+            html: `<div style="padding: 50px 14px; text-align: center;"><button class="tip" data-tip="Ação Segura">Passe o mouse aqui</button></div>`,
+            css: `.tip { padding: 10px 18px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; position: relative; }
+.tip::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: 0.2s; }
+.tip:hover::after { opacity: 1; }`,
+            js: `// Tooltip CSS puro.`
+        },
+        {
+            id: 'dropdown',
+            nome: 'Dropdown',
+            icone: '🔽',
+            categoria: '⚙️ Interativos',
+            dicas: 'Menu suspenso com opções clicáveis.',
+            html: `<div style="text-align: center; padding: 40px 14px;"><div class="drop"><button onclick="document.getElementById('dList').classList.toggle('on')">Opções ▼</button><div class="drop-l" id="dList"><a href="#">Perfil</a><a href="#">Sair</a></div></div></div>`,
+            css: `.drop { position: relative; display: inline-block; }
+.drop button { padding: 10px 16px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.drop-l { position: absolute; top: 110%; left: 0; background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-width: 140px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.drop-l.on { display: block; }
+.drop-l a { display: block; padding: 8px 12px; color: #334155; text-decoration: none; font-size: 0.85rem; text-align: left; }`,
+            js: `// Dropdown.`
+        },
+
+        // ==================== 📝 FORMULÁRIOS ====================
+        {
+            id: 'form-login',
+            nome: 'Formulário de Login',
+            icone: '🔐',
+            categoria: '📝 Formulários',
+            dicas: 'Tela de autenticação minimalista.',
+            html: `<div class="f-box"><h3>🔐 Login</h3><input type="email" placeholder="E-mail"><input type="password" placeholder="Senha"><button>Entrar</button></div>`,
+            css: `.f-box { max-width: 320px; margin: 20px auto; background: white; padding: 22px 18px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.f-box h3 { color: #7c3aed; margin-bottom: 12px; }
+.f-box input { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; font-size: 0.88rem; }
+.f-box button { width: 100%; padding: 11px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }`,
+            js: `// Form login.`
+        },
+        {
+            id: 'form-cadastro',
+            nome: 'Cadastro Completo',
+            icone: '📝',
+            categoria: '📝 Formulários',
+            dicas: 'Formulário com confirmação de senha.',
+            html: `<div class="f-box"><h3>Criar Conta</h3><input type="text" placeholder="Nome"><input type="email" placeholder="E-mail"><input type="password" placeholder="Senha"><button>Cadastrar</button></div>`,
+            css: `.f-box { max-width: 340px; margin: 20px auto; background: white; padding: 22px 18px; border-radius: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.f-box h3 { color: #7c3aed; margin-bottom: 12px; }
+.f-box input { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; font-size: 0.88rem; }
+.f-box button { width: 100%; padding: 11px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }`,
+            js: `// Form cadastro.`
+        },
+        {
+            id: 'form-contato',
+            nome: 'Formulário de Contato',
+            icone: '📞',
+            categoria: '📝 Formulários',
+            dicas: 'Campos com textarea expansível e flex-wrap.',
+            html: `<div class="f-box" style="max-width:440px;"><h3>Fale Conosco</h3><input type="text" placeholder="Seu nome"><input type="email" placeholder="Seu e-mail"><textarea rows="4" placeholder="Sua mensagem"></textarea><button>Enviar Mensagem</button></div>`,
+            css: `.f-box { background: white; padding: 22px 18px; border-radius: 12px; margin: 20px auto; }
+.f-box h3 { color: #7c3aed; margin-bottom: 12px; }
+.f-box input, .f-box textarea { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; font-size: 0.88rem; font-family: inherit; }
+.f-box button { width: 100%; padding: 11px; background: #7c3aed; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; }`,
+            js: `// Form contato.`
+        },
+        {
+            id: 'form-newsletter',
+            nome: 'Newsletter',
+            icone: '📧',
+            categoria: '📝 Formulários',
+            dicas: 'Caixa de inscrição para rodapés e seções.',
+            html: `<div class="news-wrap"><h3>Assine a Newsletter</h3><form onsubmit="event.preventDefault(); alert('Inscrito!');"><input type="email" placeholder="Digite seu e-mail" required><button type="submit">OK</button></form></div>`,
+            css: `.news-wrap { background: #1e1b4b; color: white; padding: 30px 14px; border-radius: 12px; margin: 16px; text-align: center; }
+.news-wrap h3 { margin-bottom: 12px; }
+.news-wrap form { display: flex; gap: 6px; max-width: 360px; margin: 0 auto; flex-wrap: wrap; }
+.news-wrap input { flex: 1 1 180px; padding: 10px 12px; border-radius: 6px; border: none; font-size: 0.88rem; }
+.news-wrap button { padding: 10px 18px; background: #fbbf24; border: none; border-radius: 6px; font-weight: 800; cursor: pointer; }`,
+            js: `// Newsletter.`
+        },
+        {
+            id: 'form-radio',
+            nome: 'Seleção Radio em Cartões',
+            icone: '🔘',
+            categoria: '📝 Formulários',
+            dicas: 'Seletores em cards acessíveis.',
+            html: `<div class="r-wrap"><label class="r-i"><input type="radio" name="frete" checked><span>Padrão (R$ 15)</span></label><label class="r-i"><input type="radio" name="frete"><span>Expresso (R$ 29)</span></label></div>`,
+            css: `.r-wrap { max-width: 340px; margin: 20px auto; display: flex; flex-direction: column; gap: 8px; padding: 0 14px; }
+.r-i { display: flex; align-items: center; gap: 10px; padding: 12px; background: white; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; font-size: 0.88rem; font-weight: 600; }`,
+            js: `// Radio cards.`
+        },
+        {
+            id: 'form-seletores',
+            nome: 'Seletores & Dropdown Select',
+            icone: '🔽',
+            categoria: '📝 Formulários',
+            dicas: 'Seletor nativo estilizado.',
+            html: `<div class="s-wrap"><label>Escolha o Plano:</label><select><option>Start - R$ 29</option><option>Pro - R$ 79</option></select></div>`,
+            css: `.s-wrap { max-width: 320px; margin: 20px auto; padding: 0 14px; }
+.s-wrap label { font-size: 0.85rem; font-weight: 700; color: #334155; display: block; margin-bottom: 4px; }
+.s-wrap select { width: 100%; padding: 10px 12px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; font-size: 0.88rem; font-family: inherit; }`,
+            js: `// Select.`
+        },
+
+        // ==================== 🦶 RODAPÉS ====================
+        {
+            id: 'footer-simples',
+            nome: 'Footer Simples',
+            icone: '🦶',
+            categoria: '🦶 Rodapés',
+            dicas: 'Rodapé minimalista para sites institucionais.',
+            html: `<footer class="foot-s"><p>© 2026 MeuSite. Todos os direitos reservados.</p></footer>`,
+            css: `.foot-s { background: #1e293b; color: #94a3b8; text-align: center; padding: 24px 14px; font-size: 0.82rem; }`,
+            js: `// Footer simples.`
+        },
+        {
+            id: 'footer-redes',
+            nome: 'Footer Completo com Redes',
+            icone: '🦶',
+            categoria: '🦶 Rodapés',
+            dicas: 'Padding reduzido e grid em colunas fluidas em celulares.',
+            html: `<footer class="foot-comp"><div class="fg"><div><h4>🚀 MeuSite</h4><p>Soluções digitais completas.</p></div><div><h5>Links</h5><a href="#">Sobre</a><a href="#">Contato</a></div></div><div class="cp">© 2026 MeuSite.</div></footer>`,
+            css: `.foot-comp { background: #0f172a; color: white; padding: 36px 14px 18px; }
+.fg { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 18px; max-width: 800px; margin: 0 auto 20px; }
+.fg h4 { color: #38bdf8; margin-bottom: 6px; }
+.fg h5 { margin-bottom: 6px; }
+.fg p, .fg a { color: #94a3b8; font-size: 0.82rem; text-decoration: none; display: block; margin-bottom: 4px; }
+.cp { border-top: 1px solid #1e293b; padding-top: 14px; text-align: center; color: #64748b; font-size: 0.78rem; }`,
+            js: `// Footer completo.`
+        },
+
+        // ==================== 📚 APÊNDICE & GUIAS ====================
+        {
+            id: 'apendice-links',
+            nome: 'Guia de Links & Ações Nativas',
+            icone: '📖',
+            categoria: '📚 Apêndice & Guia',
+            dicas: 'Exemplos de links internos, target="_blank" seguro e protocolos de contato (mailto, tel, whatsapp).',
+            html: `<div class="g-box"><h3>📖 Ações de Links Nativas</h3><p>Protocolos diretos para chamadas e conversas:</p><div class="g-links"><a href="mailto:contato@site.com">✉️ E-mail</a><a href="tel:+5532999999999">📞 Telefone</a><a href="https://wa.me/5532999999999" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a></div></div>`,
+            css: `.g-box { max-width: 440px; margin: 20px auto; background: white; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; }
+.g-box h3 { color: #7c3aed; margin-bottom: 6px; }
+.g-box p { color: #64748b; font-size: 0.88rem; margin-bottom: 14px; }
+.g-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.g-links a { padding: 8px 12px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: none; color: #1e293b; font-size: 0.82rem; font-weight: 700; }`,
+            js: `// Guia de links.`
+        }
+    ];
+
+    /* ============================================================
+       CONTROLE E ESTADO DA APLICAÇÃO
+       ============================================================ */
+    const categorias = [...new Set(BANCO.map(item => item.categoria))];
+    let categoriaAtual = categorias[0];
+    let componenteAtualId = BANCO[0].id;
+    let resolucaoAtual = '100%';
+
+    const listaCategorias = document.getElementById('listaCategorias');
+    const listaComponentes = document.getElementById('listaComponentes');
+    const conteudoComponente = document.getElementById('conteudoComponente');
+
+    function renderizarCategorias() {
+        listaCategorias.innerHTML = '';
+        categorias.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'cat-btn' + (cat === categoriaAtual ? ' ativo' : '');
+            btn.textContent = cat;
+            btn.onclick = () => {
+                categoriaAtual = cat;
+                const primeiro = BANCO.find(c => c.categoria === cat);
+                if (primeiro) componenteAtualId = primeiro.id;
+                renderizarCategorias();
+                renderizarComponentes();
+                carregarComponente();
+            };
+            listaCategorias.appendChild(btn);
+        });
+    }
+
+    function renderizarComponentes() {
+        listaComponentes.innerHTML = '';
+        const componentes = BANCO.filter(c => c.categoria === categoriaAtual);
+        componentes.forEach(comp => {
+            const btn = document.createElement('button');
+            btn.className = 'comp-btn' + (comp.id === componenteAtualId ? ' ativo' : '');
+            btn.innerHTML = `${comp.icone} ${comp.nome}`;
+            btn.onclick = () => {
+                componenteAtualId = comp.id;
+                renderizarComponentes();
+                carregarComponente();
+            };
+            listaComponentes.appendChild(btn);
+        });
+    }
+
+    function carregarComponente() {
+        const comp = BANCO.find(c => c.id === componenteAtualId);
+        if (!comp) return;
+
+        const htmlCompleto = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    line-height: 1.5;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+img, svg, video, iframe { max-width: 100%; height: auto; }
+input, button, textarea, select { font-family: inherit; }
+${comp.css}
+</style>
+</head>
+<body>
+${comp.html}
+<script>
+${comp.js}
+<\/script>
+</body>
+</html>`;
+
+        conteudoComponente.innerHTML = `
+            <div class="comp-header">
+                <h1>${comp.icone} ${comp.nome}</h1>
+                <div class="meta-badges">
+                    <span class="badge resp">✅ 100% Fluido (320px+)</span>
+                    <span class="badge">${comp.categoria}</span>
+                </div>
+            </div>
+
+            <div class="info-box">
+                💡 <strong>Dica de Uso:</strong> ${comp.dicas}
+            </div>
+
+            <div class="preview-box">
+                <div class="preview-topbar">
+                    <div class="preview-dots"><span class="p-dot r"></span><span class="p-dot y"></span><span class="p-dot g"></span></div>
+                    <span class="preview-meta">preview-${comp.id}.html • Largura: ${resolucaoAtual}</span>
+                    <div style="width:24px;"></div>
+                </div>
+                <div class="stage">
+                    <iframe class="preview-iframe" id="frameView" style="width: ${resolucaoAtual};"></iframe>
+                </div>
+            </div>
+
+            <div class="code-tabs">
+                <button class="c-tab ativa" onclick="mudarAba(this, 'html')">📄 HTML</button>
+                <button class="c-tab" onclick="mudarAba(this, 'css')">🎨 CSS</button>
+                <button class="c-tab" onclick="mudarAba(this, 'js')">⚙️ JS</button>
+                <button class="c-tab" onclick="mudarAba(this, 'tudo')">📦 Código Completo</button>
+            </div>
+
+            <div class="code-panel ativo" id="p-html"><button class="btn-copiar" onclick="copiar('p-html', this)">Copiar HTML</button><pre>${escapar(comp.html)}</pre></div>
+            <div class="code-panel" id="p-css"><button class="btn-copiar" onclick="copiar('p-css', this)">Copiar CSS</button><pre>${escapar(comp.css)}</pre></div>
+            <div class="code-panel" id="p-js"><button class="btn-copiar" onclick="copiar('p-js', this)">Copiar JS</button><pre>${escapar(comp.js)}</pre></div>
+            <div class="code-panel" id="p-tudo"><button class="btn-copiar" onclick="copiar('p-tudo', this)">Copiar Tudo</button><pre>${escapar(htmlCompleto)}</pre></div>
+        `;
+
+        document.getElementById('frameView').srcdoc = htmlCompleto;
+    }
+
+    function ajustarResolucao(largura, btn) {
+        document.querySelectorAll('.btn-vp').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        resolucaoAtual = largura;
+        const frame = document.getElementById('frameView');
+        if (frame) {
+            frame.style.width = largura;
+            const meta = document.querySelector('.preview-meta');
+            if (meta) meta.textContent = `preview-${componenteAtualId}.html • Largura: ${largura}`;
+        }
+    }
+
+    function mudarAba(btn, aba) {
+        document.querySelectorAll('.c-tab').forEach(b => b.classList.remove('ativa'));
+        document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('ativo'));
+        btn.classList.add('ativa');
+        document.getElementById('p-' + aba).classList.add('ativo');
+    }
+
+    function copiar(idPainel, btn) {
+        const texto = document.getElementById(idPainel).querySelector('pre').innerText;
+        navigator.clipboard.writeText(texto).then(() => {
+            const orig = btn.textContent;
+            btn.textContent = '✅ Copiado!';
+            setTimeout(() => btn.textContent = orig, 1600);
+        });
+    }
+
+    function filtrarPorBusca() {
+        const termo = document.getElementById('campoBusca').value.toLowerCase().trim();
+        if (!termo) return;
+        const encontrado = BANCO.find(c => c.nome.toLowerCase().includes(termo) || c.id.toLowerCase().includes(termo));
+        if (encontrado) {
+            categoriaAtual = encontrado.categoria;
+            componenteAtualId = encontrado.id;
+            renderizarCategorias();
+            renderizarComponentes();
+            carregarComponente();
+        }
+    }
+
+    function escapar(txt) {
+        return txt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Inicialização direta
+    renderizarCategorias();
+    renderizarComponentes();
+    carregarComponente();
+</script>
+</body>
+</html>

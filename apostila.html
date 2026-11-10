@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apostila Prática — Fundamentos de Debug Front-end</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --border: #334155;
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #38bdf8;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+    --danger-bg: #450a0a;
+    --success: #22c55e;
+    --code-bg: #0b0f19;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+  body { background: var(--bg); color: var(--text); padding: 32px 16px 80px; line-height: 1.6; }
+  .container { max-width: 840px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+  header p { color: var(--text-muted); font-size: 1rem; max-width: 620px; margin: 0 auto; }
+
+  .guia-rapido { background: #132338; border: 1px solid #0284c7; border-radius: 12px; padding: 18px 22px; margin-bottom: 36px; }
+  .guia-rapido h3 { color: var(--primary); font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .guia-rapido ol { margin-left: 20px; font-size: 0.92rem; color: #cbd5e1; }
+  .guia-rapido ol li { margin-bottom: 6px; }
+
+  .lab-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 32px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); }
+  .lab-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .badge { background: var(--primary); color: #0f172a; font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
+  .badge-alvo { background: #3b82f6; color: #fff; font-size: 0.72rem; padding: 3px 10px; border-radius: 6px; font-weight: 700; }
+  
+  h2 { font-size: 1.35rem; color: #fff; margin-bottom: 10px; }
+  p.descricao { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 16px; }
+
+  .box-erro { background: var(--danger-bg); border-left: 4px solid var(--danger); padding: 12px 16px; border-radius: 8px; margin-bottom: 18px; font-size: 0.86rem; }
+  .box-erro strong { color: #fca5a5; display: block; margin-bottom: 4px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  .box-erro code { color: #fecaca; font-family: 'Courier New', monospace; font-size: 0.9em; }
+
+  .codigo-area { position: relative; margin-bottom: 18px; }
+  .codigo-topo { display: flex; justify-content: space-between; align-items: center; background: #141c2e; padding: 8px 14px; border-top-left-radius: 8px; border-top-right-radius: 8px; border: 1px solid var(--border); border-bottom: none; font-size: 0.78rem; color: var(--text-muted); font-family: monospace; }
+  .btn-copiar { background: #334155; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .btn-copiar:hover { background: var(--primary); color: #0f172a; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; padding: 14px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.85rem; color: #e2e8f0; line-height: 1.5; }
+
+  .passos-experimento { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 16px 18px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.06); }
+  .passos-experimento h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; letter-spacing: 0.5px; }
+  .passos-experimento ol { margin-left: 20px; font-size: 0.9rem; color: #cbd5e1; }
+  .passos-experimento ol li { margin-bottom: 6px; }
+
+  .conserto-box { background: #064e3b; border-left: 4px solid var(--success); padding: 12px 16px; border-radius: 8px; font-size: 0.9rem; color: #d1fae5; margin-bottom: 18px; }
+  .conserto-box strong { color: #86efac; display: block; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 4px; }
+
+  /* Mini-simuladores integrados */
+  .simulador { background: #0f172a; border: 1px solid #475569; border-radius: 10px; padding: 16px; }
+  .simulador-tag { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; display: block; }
+  .sim-item { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  input[type="text"] { background: #1e293b; color: #fff; border: 1px solid #475569; border-radius: 6px; padding: 8px 12px; font-size: 0.88rem; min-width: 200px; }
+  button.sim-btn { background: var(--primary); color: #0f172a; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.88rem; }
+  button.sim-btn:hover { background: #0284c7; color: #fff; }
+  .box-hover-demo { padding: 14px 20px; background: #1e293b; border: 2px solid #475569; border-radius: 8px; font-weight: 700; text-align: center; cursor: pointer; transition: 0.2s; }
+  .sim-feedback { font-size: 0.88rem; font-weight: 700; color: var(--success); min-height: 22px; }
+  .sim-feedback.erro { color: var(--danger); font-family: monospace; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <h1>📘 Apostila Prática: Depuração Front-end</h1>
+    <p>5 Mini-Laboratórios práticos baseados na <strong>Pizzaria Dev</strong> para você entender a causa de cada erro, testar no OneCompiler e dominar a atividade principal.</p>
+  </header>
+
+  <section class="guia-rapido">
+    <h3>🚀 Como praticar com estes laboratórios:</h3>
+    <ol>
+      <li>Cada laboratório ensina <strong>1 conceito isolado</strong> com um exemplo simples.</li>
+      <li>Você pode clicar em <strong>"Copiar Código"</strong> e colar diretamente no <a href="https://onecompiler.com/html" target="_blank" style="color:var(--primary); font-weight:700;">OneCompiler (HTML)</a> para rodar e ver o console do desenvolvedor.</li>
+      <li>Você também pode testar a versão funcional diretamente no <strong>Simulador</strong> dentro desta própria apostila!</li>
+    </ol>
+  </section>
+
+  <!-- LAB 1 -->
+  <article class="lab-card">
+    <div class="lab-header">
+      <span class="badge">Laboratório 1</span>
+      <span class="badge-alvo">Relacionado ao Bug 1 (Botão de Orçamento)</span>
+    </div>
+    <h2>Chamada de Função no HTML x Nome Declarado</h2>
+    <p class="descricao">
+      Quando usamos o atributo <code>onclick="minhaFuncao()"</code> em uma tag HTML, o navegador procura exatamente essa função no JavaScript. Se houver qualquer divergência de digitação, o JavaScript não adivinha e acusa que a função não existe.
+    </p>
+
+    <div class="box-erro">
+      <strong>O Erro do Console quando o nome não bate:</strong>
+      <code>Uncaught ReferenceError: enviarPedido is not defined at HTMLButtonElement.onclick</code>
+    </div>
+
+    <div class="codigo-area">
+      <div class="codigo-topo">
+        <span>snippet-lab1.html</span>
+        <button class="btn-copiar" onclick="copiarCodigo('code-lab1', this)">Copiar Código</button>
+      </div>
+<pre id="code-lab1">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h3&gt;Pizzaria Dev&lt;/h3&gt;
+  &lt;!-- ERRO: O onclick chama enviarPedido(), mas o script declarou assarPizza() --&gt;
+  &lt;button onclick="enviarPedido()"&gt;Pedir Pizza&lt;/button&gt;
+
+  &lt;script&gt;
+    function assarPizza() {
+      alert("🍕 Pizza enviada para o forno!");
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="passos-experimento">
+      <h4>Experimento no OneCompiler:</h4>
+      <ol>
+        <li>Copie o código acima, cole no OneCompiler e clique em <strong>Run</strong>.</li>
+        <li>Clique no botão "Pedir Pizza". Nada acontece na tela.</li>
+        <li>Olhe a aba <strong>Console</strong>: o erro <code>ReferenceError</code> aparece na hora.</li>
+      </ol>
+    </div>
+
+    <div class="conserto-box">
+      <strong>Como consertar:</strong>
+      Faça o nome do <code>onclick</code> no HTML ser idêntico ao da função no JavaScript:<br>
+      <code>&lt;button onclick="assarPizza()"&gt;Pedir Pizza&lt;/button&gt;</code>
+    </div>
+
+    <div class="simulador">
+      <span class="simulador-tag">Demonstração Interativa Funcionando:</span>
+      <button class="sim-btn" onclick="simularLab1()">Pedir Pizza (Corrigido)</button>
+      <div id="res-lab1" class="sim-feedback"></div>
+    </div>
+  </article>
+
+  <!-- LAB 2 -->
+  <article class="lab-card">
+    <div class="lab-header">
+      <span class="badge">Laboratório 2</span>
+      <span class="badge-alvo">Relacionado ao Bug 2 (Campo de Nome)</span>
+    </div>
+    <h2>Buscando Elementos por ID e Lendo <code>.value</code></h2>
+    <p class="descricao">
+      O método <code>document.getElementById("id-aqui")</code> precisa receber o mesmo ID colocado no HTML. Se o ID estiver errado, o método devolve <code>null</code> (nada). Tentar ler <code>null.value</code> quebra a aplicação imediatamente.
+    </p>
+
+    <div class="box-erro">
+      <strong>O Erro do Console quando o ID não existe:</strong>
+      <code>Uncaught TypeError: Cannot read properties of null (reading 'value')</code>
+    </div>
+
+    <div class="codigo-area">
+      <div class="codigo-topo">
+        <span>snippet-lab2.html</span>
+        <button class="btn-copiar" onclick="copiarCodigo('code-lab2', this)">Copiar Código</button>
+      </div>
+<pre id="code-lab2">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;h3&gt;Escolha o Sabor&lt;/h3&gt;
+  &lt;!-- O input tem id="sabor" --&gt;
+  &lt;input type="text" id="sabor" placeholder="Digite o sabor"&gt;
+  &lt;button onclick="confirmar()"&gt;Confirmar&lt;/button&gt;
+
+  &lt;script&gt;
+    function confirmar() {
+      // ERRO: Procurou "sabor-pizza", mas no HTML só existe "sabor"
+      let campo = document.getElementById("sabor-pizza");
+      let texto = campo.value; // QUEBRA AQUI!
+      alert("Sabor: " + texto);
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="passos-experimento">
+      <h4>Experimento no OneCompiler:</h4>
+      <ol>
+        <li>Cole o código no OneCompiler, digite um sabor e clique em "Confirmar".</li>
+        <li>O alerta não aparece e o console acusa <code>Cannot read properties of null</code>.</li>
+      </ol>
+    </div>
+
+    <div class="conserto-box">
+      <strong>Como consertar:</strong>
+      Alinhe o ID da busca com o ID que está na tag <code>&lt;input&gt;</code>:<br>
+      <code>let campo = document.getElementById("sabor");</code>
+    </div>
+
+    <div class="simulador">
+      <span class="simulador-tag">Demonstração Interativa Funcionando:</span>
+      <div class="sim-item">
+        <input type="text" id="sim-sabor" placeholder="Ex: Calabresa Especial">
+        <button class="sim-btn" onclick="simularLab2()">Confirmar Sabor</button>
+      </div>
+      <div id="res-lab2" class="sim-feedback"></div>
+    </div>
+  </article>
+
+  <!-- LAB 3 -->
+  <article class="lab-card">
+    <div class="lab-header">
+      <span class="badge">Laboratório 3</span>
+      <span class="badge-alvo">Relacionado ao Bug 3 (Card de Preço)</span>
+    </div>
+    <h2>Eventos do Mouse: <code>mouseover</code> e <code>mouseout</code></h2>
+    <p class="descricao">
+      Para criar efeitos que reagem à passagem do mouse sem precisar clicar, usamos <code>mouseover</code> (cursor entra) e <code>mouseout</code> (cursor sai). O erro comum é usar <code>click</code> ou esquecer de registrar o retorno com <code>mouseout</code>.
+    </p>
+
+    <div class="box-erro">
+      <strong>O Sintoma: Bug Silencioso</strong><br>
+      Nenhum erro aparece em vermelho no console, mas o elemento não reage ao passar o mouse.
+    </div>
+
+    <div class="codigo-area">
+      <div class="codigo-topo">
+        <span>snippet-lab3.html</span>
+        <button class="btn-copiar" onclick="copiarCodigo('code-lab3', this)">Copiar Código</button>
+      </div>
+<pre id="code-lab3">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;div id="card" style="padding:20px; background:#ddd; width:180px;"&gt;Pizza 4 Queijos&lt;/div&gt;
+
+  &lt;script&gt;
+    let card = document.getElementById("card");
+
+    // ERRO: Usou "click" para um efeito de passar o mouse!
+    card.addEventListener("click", destacar);
+
+    function destacar() {
+      this.style.background = "#fef08a"; // Amarelo
+    }
+
+    function restaurar() {
+      this.style.background = "#ddd"; // Volta ao normal
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="conserto-box">
+      <strong>Como consertar:</strong>
+      Troque o evento para <code>mouseover</code> e adicione a escuta do <code>mouseout</code>:<br>
+      <code>card.addEventListener("mouseover", destacar);</code><br>
+      <code>card.addEventListener("mouseout", restaurar);</code>
+    </div>
+
+    <div class="simulador">
+      <span class="simulador-tag">Demonstração Interativa Funcionando (passe o cursor por cima):</span>
+      <div id="sim-card-hover" class="box-hover-demo">🧀 Pizza 4 Queijos (Destaque)</div>
+    </div>
+  </article>
+
+  <!-- LAB 4 -->
+  <article class="lab-card">
+    <div class="lab-header">
+      <span class="badge">Laboratório 4</span>
+      <span class="badge-alvo">Relacionado ao Bug 4 (Cálculo de Desconto)</span>
+    </div>
+    <h2>O Retorno de Funções (<code>return</code>) e <code>.toFixed()</code></h2>
+    <p class="descricao">
+      Uma função que faz um cálculo precisa usar a instrução <code>return</code> para entregar o resultado de volta. Se o <code>return</code> for esquecido, a função entrega <code>undefined</code>. Ao tentar formatar o número com <code>.toFixed()</code>, o código quebra.
+    </p>
+
+    <div class="box-erro">
+      <strong>O Erro do Console por falta de return:</strong>
+      <code>Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed')</code>
+    </div>
+
+    <div class="codigo-area">
+      <div class="codigo-topo">
+        <span>snippet-lab4.html</span>
+        <button class="btn-copiar" onclick="copiarCodigo('code-lab4', this)">Copiar Código</button>
+      </div>
+<pre id="code-lab4">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;button onclick="calcular()"&gt;Calcular Pedido&lt;/button&gt;
+  &lt;p id="total"&gt;&lt;/p&gt;
+
+  &lt;script&gt;
+    function calcularTaxaEntrega(precoBase) {
+      let taxa = 6.00;
+      let total = precoBase + taxa;
+      // ERRO: Faltou entregar o total com "return total;"!
+    }
+
+    function calcular() {
+      let resultado = calcularTaxaEntrega(40.00); 
+      // Como resultado é undefined, toFixed(2) quebra o programa:
+      document.getElementById("total").textContent = "Total: R$ " + resultado.toFixed(2);
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="conserto-box">
+      <strong>Como consertar:</strong>
+      Basta adicionar <code>return total;</code> antes do fechamento da função de cálculo:<br>
+      <code>function calcularTaxaEntrega(precoBase) { ... return total; }</code>
+    </div>
+
+    <div class="simulador">
+      <span class="simulador-tag">Demonstração Interativa Funcionando:</span>
+      <button class="sim-btn" onclick="simularLab4()">Calcular Pizza (R$ 40) + Entrega (R$ 6)</button>
+      <div id="res-lab4" class="sim-feedback"></div>
+    </div>
+  </article>
+
+  <!-- LAB 5 -->
+  <article class="lab-card">
+    <div class="lab-header">
+      <span class="badge">Laboratório 5</span>
+      <span class="badge-alvo">Relacionado ao Bug 5 (Contador de Caracteres)</span>
+    </div>
+    <h2>Contadores com <code>for</code> e <code>.length</code></h2>
+    <p class="descricao">
+      Para contar letras de uma string com um laço <code>for</code>, o índice <code>i</code> precisa caminhar do <code>0</code> até o comprimento do texto (<code>texto.length</code>). Se a condição de parada já começar falsa (ex: <code>i &lt; 0</code>), o laço nunca roda e o total fica em zero.
+    </p>
+
+    <div class="box-erro">
+      <strong>O Sintoma: Contador travado</strong><br>
+      Ao digitar na caixa de texto, o contador fica preso em "0 letras" (mesmo após digitar várias palavras).
+    </div>
+
+    <div class="codigo-area">
+      <div class="codigo-topo">
+        <span>snippet-lab5.html</span>
+        <button class="btn-copiar" onclick="copiarCodigo('code-lab5', this)">Copiar Código</button>
+      </div>
+<pre id="code-lab5">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;textarea id="obs" oninput="atualizar()"&gt;&lt;/textarea&gt;
+  &lt;div id="contagem"&gt;0 caracteres&lt;/div&gt;
+
+  &lt;script&gt;
+    function contarTexto(texto) {
+      let total = 0;
+      // ERRO: i começa valendo 0. Como 0 < 0 é FALSO, o bloco nunca roda!
+      for (let i = 0; i &lt; 0; i++) {
+        total = total + 1;
+      }
+      return total;
+    }
+
+    function atualizar() {
+      let valor = document.getElementById("obs").value;
+      let totalLetras = contarTexto(valor);
+      document.getElementById("contagem").textContent = totalLetras + " caracteres";
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <div class="conserto-box">
+      <strong>Como consertar:</strong>
+      Faça a condição comparar com o tamanho da string (<code>.length</code>):<br>
+      <code>for (let i = 0; i &lt; texto.length; i++) {</code>
+    </div>
+
+    <div class="simulador">
+      <span class="simulador-tag">Demonstração Interativa Funcionando (digite algo abaixo):</span>
+      <input type="text" id="sim-input-obs" placeholder="Digite uma observação do pedido..." oninput="simularLab5()">
+      <div id="res-lab5" class="sim-feedback">0 caracteres</div>
+    </div>
+  </article>
+
+</div>
+
+<script>
+  // Utilitário para copiar snippets
+  function copiarCodigo(idElemento, botao) {
+    const texto = document.getElementById(idElemento).innerText;
+    navigator.clipboard.writeText(texto).then(() => {
+      const original = botao.innerText;
+      botao.innerText = "Copiado! ✓";
+      botao.style.background = "var(--success)";
+      setTimeout(() => {
+        botao.innerText = original;
+        botao.style.background = "";
+      }, 1800);
+    });
+  }
+
+  // Simulações dos Labs (Execução dos códigos corrigidos em tela)
+  function simularLab1() {
+    document.getElementById("res-lab1").textContent = "🍕 Sucesso: A função 'assarPizza()' foi executada corretamente!";
+  }
+
+  function simularLab2() {
+    let campo = document.getElementById("sim-sabor");
+    if (campo && campo.value.trim() !== "") {
+      document.getElementById("res-lab2").textContent = "✓ Sabor capturado com sucesso: " + campo.value;
+    } else {
+      document.getElementById("res-lab2").textContent = "⚠️ Digite um sabor primeiro no campo de texto.";
+    }
+  }
+
+  // Lab 3 - Hover
+  const cardHover = document.getElementById("sim-card-hover");
+  cardHover.addEventListener("mouseover", function() {
+    this.style.background = "#fef08a";
+    this.style.color = "#0f172a";
+    this.style.borderColor = "#f59e0b";
+  });
+  cardHover.addEventListener("mouseout", function() {
+    this.style.background = "#1e293b";
+    this.style.color = "#f8fafc";
+    this.style.borderColor = "#475569";
+  });
+
+  // Lab 4 - Return e toFixed
+  function somarEntregaCorrigido(preco) {
+    let taxa = 6.00;
+    return preco + taxa; // Retorno correto
+  }
+  function simularLab4() {
+    let total = somarEntregaCorrigido(40.00);
+    document.getElementById("res-lab4").textContent = "✓ Total formatado com toFixed(2): R$ " + total.toFixed(2);
+  }
+
+  // Lab 5 - Loop com .length
+  function contarCaracteresCorrigido(str) {
+    let contagem = 0;
+    for (let i = 0; i < str.length; i++) {
+      contagem++;
+    }
+    return contagem;
+  }
+  function simularLab5() {
+    let texto = document.getElementById("sim-input-obs").value;
+    let total = contarCaracteresCorrigido(texto);
+    document.getElementById("res-lab5").textContent = total + " caractere(s) digitado(s)";
+  }
+</script>
+
+</body>
+</html>

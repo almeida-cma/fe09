@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 Desafios Front-End — Landing Pages Reais</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg-body: #070c18;
+            --bg-card: #0f172a;
+            --bg-card-alt: #1e293b;
+            --border: #334155;
+            --primary: #38bdf8;
+            --accent: #818cf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* HEADER */
+        .top-hero {
+            background: linear-gradient(180deg, #0f172a 0%, #070c18 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 36px 20px 24px;
+            text-align: center;
+        }
+
+        .badge-header {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .top-hero h1 {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .top-hero p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* BARRA DE NAVEGAÇÃO DE DESAFIOS */
+        .nav-tabs-wrap {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 500;
+            padding: 8px 16px;
+        }
+
+        .nav-tabs {
+            max-width: 1040px;
+            margin: 0 auto;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: thin;
+        }
+        .nav-tabs::-webkit-scrollbar { height: 4px; }
+        .nav-tabs::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn:hover { color: #fff; border-color: var(--primary); }
+        .tab-btn.ativo {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #070c18;
+            font-weight: 800;
+            border-color: transparent;
+        }
+
+        /* CONTAINER PRINCIPAL */
+        .container {
+            max-width: 960px;
+            margin: 28px auto 0;
+            padding: 0 16px;
+        }
+
+        .painel-conteudo { display: none; }
+        .painel-conteudo.ativo { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CARDS DE CONTEÚDO */
+        .card-secao {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .card-header-flex h2 {
+            font-size: 1.45rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-segmento {
+            background: #1e293b;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* PALETAS INTERATIVAS (CLIQUE PARA COPIAR) */
+        .paleta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin: 14px 0 20px;
+        }
+
+        .cor-box {
+            background: #070c18;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .cor-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .cor-amostra {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .cor-info strong {
+            display: block;
+            font-size: 0.76rem;
+            color: #fff;
+            font-family: monospace;
+        }
+        .cor-info span {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        /* LISTAS DE COMPONENTES */
+        .comp-tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 16px;
+        }
+
+        .comp-tag {
+            background: #070c18;
+            color: var(--primary);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        /* CHECKLIST INTERATIVO */
+        .checklist-progresso {
+            background: #070c18;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 14px;
+        }
+
+        .barra-progresso-bg {
+            height: 6px;
+            background: #1e293b;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0 14px;
+        }
+        .barra-progresso-fill {
+            height: 100%;
+            background: var(--success);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            user-select: none;
+        }
+        .check-item input[type="checkbox"] {
+            margin-top: 4px;
+            accent-color: var(--success);
+            cursor: pointer;
+        }
+
+        /* TABELA DA MATRIZ */
+        .tabela-wrap {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+        th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        th { background: #1e293b; color: var(--primary); font-weight: 800; font-size: 0.82rem; text-transform: uppercase; }
+        td strong { color: #fff; }
+
+        /* TOAST DE COPIADO */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--success);
+            color: #070c18;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.82rem;
+            transform: translateY(100px);
+            transition: transform 0.3s;
+            z-index: 2000;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+        .toast.on { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- CABEÇALHO -->
+    <header class="top-hero">
+        <span class="badge-header">PROJETOS PRÁTICOS • FRONT-END</span>
+        <h1>Enunciados das Landing Pages Reais</h1>
+        <p>Desenvolva páginas profissionais para 5 segmentos de mercado utilizando a Biblioteca de 52 Componentes e Modelos em Grid.</p>
+    </header>
+
+    <!-- ABAS DE NAVEGAÇÃO -->
+    <nav class="nav-tabs-wrap">
+        <div class="nav-tabs" id="navTabs">
+            <button class="tab-btn ativo" onclick="trocarAba(0)">📋 Guia de Execução</button>
+            <button class="tab-btn" onclick="trocarAba(1)">🚀 1. FinPulse (SaaS)</button>
+            <button class="tab-btn" onclick="trocarAba(2)">🌿 2. Botânica Pura</button>
+            <button class="tab-btn" onclick="trocarAba(3)">🐾 3. PetCare 24h</button>
+            <button class="tab-btn" onclick="trocarAba(4)">💻 4. DevMaster Pro</button>
+            <button class="tab-btn" onclick="trocarAba(5)">🍔 5. Brasa Nobre</button>
+            <button class="tab-btn" onclick="trocarAba(6)">📊 Matriz de Avaliação</button>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- ==================== GUIA GERAL ==================== -->
+        <section class="painel-conteudo ativo">
+            <div class="card-secao">
+                <h2>📋 Como Trabalhar em Qualquer Desafio</h2>
+                <p style="color:var(--text-muted); margin: 8px 0 16px;">Siga este fluxo passo a passo para construir sua página de forma modular e organizada:</p>
+
+                <ol style="margin-left: 20px; font-size: 0.92rem; color: #cbd5e1; line-height: 1.8;">
+                    <li>Abra a ferramenta <strong>Biblioteca Web & Modelos em Grid</strong> no seu navegador.</li>
+                    <li>Crie um arquivo <code>index.html</code> limpo no seu editor de código (VSCode, OneCompiler, etc.).</li>
+                    <li>Navegue pelas abas da biblioteca e copie o <strong>HTML</strong>, <strong>CSS</strong> e <strong>JS</strong> dos componentes solicitados no enunciado.</li>
+                    <li>Cole os blocos no seu arquivo, unifique o estilo na tag <code>&lt;style&gt;</code> e os scripts em <code>&lt;script&gt;</code>.</li>
+                    <li>Aplique a <strong>paleta de cores recomendada</strong> substituindo os tons roxos padrões da biblioteca.</li>
+                    <li><strong>Regra de Ouro:</strong> Teste nas larguras <strong>320px</strong>, <strong>375px</strong> e <strong>Desktop</strong>. A página não pode ter barra de rolagem horizontal indesejada!</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ==================== DESAFIO 1 ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <div class="card-header-flex">
+                    <div>
+                        <h2>🚀 Desafio 1: FinPulse</h2>
+                        <p style="color:var(--text-muted); font-size: 0.9rem;">SaaS de Gestão Financeira para Pequenas Empresas</p>
+                    </div>
+                    <span class="tag-segmento">Tecnologia B2B / Finanças</span>
+                </div>
+
+                <p><strong>Objetivo:</strong> Convencer donos de micro e pequenas empresas a iniciarem um teste gratuito de 14 dias para automatizar fluxo de caixa e emissão de notas fiscais.</p>
+
+                <h4 style="margin-top: 18px; color: var(--primary);">🎨 Paleta Recomendada (Clique para copiar o HEX):</h4>
+                <div class="paleta-grid">
+                    <div class="cor-box" onclick="copiarHex('#0b1120')"><div class="cor-amostra" style="background:#0b1120;"></div><div class="cor-info"><strong>#0b1120</strong><span>Fundo Página</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#131d31')"><div class="cor-amostra" style="background:#131d31;"></div><div class="cor-info"><strong>#131d31</strong><span>Cards / Superfície</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#10b981')"><div class="cor-amostra" style="background:#10b981;"></div><div class="cor-info"><strong>#10b981</strong><span>Ação / Verde</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#38bdf8')"><div class="cor-amostra" style="background:#38bdf8;"></div><div class="cor-info"><strong>#38bdf8</strong><span>Destaque Ciano</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#26354f')"><div class="cor-amostra" style="background:#26354f;"></div><div class="cor-info"><strong>#26354f</strong><span>Bordas</span></div></div>
+                </div>
+
+                <h4 style="color: var(--primary);">🧱 Componentes a Utilizar da Biblioteca:</h4>
+                <div class="comp-tag-list">
+                    <span class="comp-tag">grid-saas</span>
+                    <span class="comp-tag">grid-bento</span>
+                    <span class="comp-tag">precos</span>
+                    <span class="comp-tag">faq</span>
+                    <span class="comp-tag">footer-redes</span>
+                </div>
+
+                <div class="checklist-progresso">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                        <span>Seu Progresso no Desafio</span>
+                        <span class="perc-label">0%</span>
+                    </div>
+                    <div class="barra-progresso-bg"><div class="barra-progresso-fill"></div></div>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Hero com CTA "Começar 14 Dias Grátis" e âncora suave para #precos</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Grade Bento Box destacando: Fluxo Automático, NF-e em 1 clique e Segurança</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Tabela de Preços com Planos MEI (R$ 39) e PME Pro (R$ 89)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> FAQ interativo com dúvidas sobre integração bancária</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Testado em 320px sem botões desalinhados ou barra de rolagem lateral</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DESAFIO 2 ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <div class="card-header-flex">
+                    <div>
+                        <h2>🌿 Desafio 2: Botânica Pura</h2>
+                        <p style="color:var(--text-muted); font-size: 0.9rem;">E-commerce D2C de Cosméticos Veganos</p>
+                    </div>
+                    <span class="tag-segmento">E-commerce / Beleza Natural</span>
+                </div>
+
+                <p><strong>Objetivo:</strong> Apresentar a linha de cosméticos naturais orgânicos, destacar a bandeira sustentável (cruelty-free) e gerar compras diretas de kits promocionais.</p>
+
+                <h4 style="margin-top: 18px; color: var(--primary);">🎨 Paleta Recomendada:</h4>
+                <div class="paleta-grid">
+                    <div class="cor-box" onclick="copiarHex('#fdfbf7')"><div class="cor-amostra" style="background:#fdfbf7;"></div><div class="cor-info"><strong>#fdfbf7</strong><span>Fundo Alabastro</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#2d5a43')"><div class="cor-amostra" style="background:#2d5a43;"></div><div class="cor-info"><strong>#2d5a43</strong><span>Verde Floresta</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#c26d38')"><div class="cor-amostra" style="background:#c26d38;"></div><div class="cor-info"><strong>#c26d38</strong><span>Ação Terracota</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#e7e5e0')"><div class="cor-amostra" style="background:#e7e5e0;"></div><div class="cor-info"><strong>#e7e5e0</strong><span>Bordas Suaves</span></div></div>
+                </div>
+
+                <h4 style="color: var(--primary);">🧱 Componentes a Utilizar:</h4>
+                <div class="comp-tag-list">
+                    <span class="comp-tag">navbar-hamburger</span>
+                    <span class="comp-tag">hero-imagem</span>
+                    <span class="comp-tag">beneficios</span>
+                    <span class="comp-tag">produtos</span>
+                    <span class="comp-tag">depoimentos</span>
+                    <span class="comp-tag">footer-simples</span>
+                </div>
+
+                <div class="checklist-progresso">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                        <span>Seu Progresso no Desafio</span>
+                        <span class="perc-label">0%</span>
+                    </div>
+                    <div class="barra-progresso-bg"><div class="barra-progresso-fill"></div></div>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Topo com logo "🌿 Botânica Pura" e links com menu responsivo</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Hero com imagem natural e slogan "Beleza limpa, consciente e brasileira"</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Selos de Confiança: Cruelty-free, Zero Plástico e Ativos Puros</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> 3 Produtos destacados (Sérum R$ 79,90, Hidratante R$ 89,90, Tônico R$ 54,90)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Imagens com proporção uniforme (aspect-ratio: 3/2) sem distorções</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DESAFIO 3 ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <div class="card-header-flex">
+                    <div>
+                        <h2>🐾 Desafio 3: PetCare 24h</h2>
+                        <p style="color:var(--text-muted); font-size: 0.9rem;">Hospital Veterinário & Centro Diagnóstico</p>
+                    </div>
+                    <span class="tag-segmento">Saúde Animal / Serviços Locais</span>
+                </div>
+
+                <p><strong>Objetivo:</strong> Transmitir credibilidade médica, acolhimento aos tutores e facilitar o agendamento de consultas ou contato de emergência via WhatsApp.</p>
+
+                <h4 style="margin-top: 18px; color: var(--primary);">🎨 Paleta Recomendada:</h4>
+                <div class="paleta-grid">
+                    <div class="cor-box" onclick="copiarHex('#f8fafc')"><div class="cor-amostra" style="background:#f8fafc;"></div><div class="cor-info"><strong>#f8fafc</strong><span>Fundo Slate</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#0284c7')"><div class="cor-amostra" style="background:#0284c7;"></div><div class="cor-info"><strong>#0284c7</strong><span>Azul Saúde</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#dc2626')"><div class="cor-amostra" style="background:#dc2626;"></div><div class="cor-info"><strong>#dc2626</strong><span>Alerta 24h</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#25D366')"><div class="cor-amostra" style="background:#25D366;"></div><div class="cor-info"><strong>#25D366</strong><span>WhatsApp</span></div></div>
+                </div>
+
+                <h4 style="color: var(--primary);">🧱 Componentes a Utilizar:</h4>
+                <div class="comp-tag-list">
+                    <span class="comp-tag">navbar-fixa</span>
+                    <span class="comp-tag">boas-vindas</span>
+                    <span class="comp-tag">servicos</span>
+                    <span class="comp-tag">equipe</span>
+                    <span class="comp-tag">localizacao</span>
+                    <span class="comp-tag">apendice-links</span>
+                </div>
+
+                <div class="checklist-progresso">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                        <span>Seu Progresso no Desafio</span>
+                        <span class="perc-label">0%</span>
+                    </div>
+                    <div class="barra-progresso-bg"><div class="barra-progresso-fill"></div></div>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Topo fixo com botão em destaque "🚨 Plantão 24h"</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Hero com mensagem de acolhimento e botão direto para o WhatsApp</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Especialidades: Consultas & Vacinas, Exames & Raio-X, UTI & Cirurgias</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Grade com 3 médicos veterinários (foto, CRMV e especialidade)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Bloco de localização sem estourar a tela em 320px</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DESAFIO 4 ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <div class="card-header-flex">
+                    <div>
+                        <h2>💻 Desafio 4: DevMaster Pro</h2>
+                        <p style="color:var(--text-muted); font-size: 0.9rem;">Formação Intensiva Full-Stack em 12 Semanas</p>
+                    </div>
+                    <span class="tag-segmento">EdTech / Infoproduto</span>
+                </div>
+
+                <p><strong>Objetivo:</strong> Landing page de vendas de alta conversão para captura de alunos para uma turma fechada com mentoria ao vivo.</p>
+
+                <h4 style="margin-top: 18px; color: var(--primary);">🎨 Paleta Recomendada:</h4>
+                <div class="paleta-grid">
+                    <div class="cor-box" onclick="copiarHex('#050811')"><div class="cor-amostra" style="background:#050811;"></div><div class="cor-info"><strong>#050811</strong><span>Deep Space</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#0f172a')"><div class="cor-amostra" style="background:#0f172a;"></div><div class="cor-info"><strong>#0f172a</strong><span>Cards Escuros</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#8b5cf6')"><div class="cor-amostra" style="background:#8b5cf6;"></div><div class="cor-info"><strong>#8b5cf6</strong><span>Violeta Tech</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#fbbf24')"><div class="cor-amostra" style="background:#fbbf24;"></div><div class="cor-info"><strong>#fbbf24</strong><span>CTA Amarelo</span></div></div>
+                </div>
+
+                <h4 style="color: var(--primary);">🧱 Componentes a Utilizar:</h4>
+                <div class="comp-tag-list">
+                    <span class="comp-tag">hero-form</span>
+                    <span class="comp-tag">estatisticas</span>
+                    <span class="comp-tag">timeline</span>
+                    <span class="comp-tag">precos</span>
+                    <span class="comp-tag">faq</span>
+                    <span class="comp-tag">footer-simples</span>
+                </div>
+
+                <div class="checklist-progresso">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                        <span>Seu Progresso no Desafio</span>
+                        <span class="perc-label">0%</span>
+                    </div>
+                    <div class="barra-progresso-bg"><div class="barra-progresso-fill"></div></div>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Hero com formulário de lista de espera e validação nativa required</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Estatísticas (+850 formados, 89% empregabilidade, 120h de código)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Timeline com a evolução do aluno: Mês 1, Mês 2 e Mês 3</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Card de Investimento (12x de R$ 97,00 ou R$ 997 à vista)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> FAQ com script ativo abrindo e fechando dúvidas ao clique</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DESAFIO 5 ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <div class="card-header-flex">
+                    <div>
+                        <h2>🍔 Desafio 5: Brasa Nobre</h2>
+                        <p style="color:var(--text-muted); font-size: 0.9rem;">Hamburgueria Artesanal & Smokehouse</p>
+                    </div>
+                    <span class="tag-segmento">Gastronomia / Restaurante</span>
+                </div>
+
+                <p><strong>Objetivo:</strong> Apresentar os carros-chefes do cardápio com apelo visual provocativo, horário de funcionamento e botão para pedir pelo delivery/WhatsApp.</p>
+
+                <h4 style="margin-top: 18px; color: var(--primary);">🎨 Paleta Recomendada:</h4>
+                <div class="paleta-grid">
+                    <div class="cor-box" onclick="copiarHex('#121214')"><div class="cor-amostra" style="background:#121214;"></div><div class="cor-info"><strong>#121214</strong><span>Carvão Escuro</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#1a1a1e')"><div class="cor-amostra" style="background:#1a1a1e;"></div><div class="cor-info"><strong>#1a1a1e</strong><span>Cards Pretos</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#ea580c')"><div class="cor-amostra" style="background:#ea580c;"></div><div class="cor-info"><strong>#ea580c</strong><span>Laranja Fogo</span></div></div>
+                    <div class="cor-box" onclick="copiarHex('#f59e0b')"><div class="cor-amostra" style="background:#f59e0b;"></div><div class="cor-info"><strong>#f59e0b</strong><span>Dourado Mostarda</span></div></div>
+                </div>
+
+                <h4 style="color: var(--primary);">🧱 Componentes a Utilizar:</h4>
+                <div class="comp-tag-list">
+                    <span class="comp-tag">navbar-hamburger</span>
+                    <span class="comp-tag">hero-imagem</span>
+                    <span class="comp-tag">produtos</span>
+                    <span class="comp-tag">galeria</span>
+                    <span class="comp-tag">localizacao</span>
+                    <span class="comp-tag">footer-redes</span>
+                </div>
+
+                <div class="checklist-progresso">
+                    <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                        <span>Seu Progresso no Desafio</span>
+                        <span class="perc-label">0%</span>
+                    </div>
+                    <div class="barra-progresso-bg"><div class="barra-progresso-fill"></div></div>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Topo com logo "🔥 BRASA NOBRE" e botão de pedido rápido</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Hero com foto defumada e chamada sensorial irresistível</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Cardápio: Smash Bacon (R$ 38), Truffle Gorgon (R$ 44), Smokehouse (R$ 42)</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Galeria de fotos mantendo 2 colunas mesmo na resolução de 320px</label>
+                    <label class="check-item"><input type="checkbox" onchange="atualizarProgresso(this)"> Endereço e horários de retirada bem visíveis</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== MATRIZ DE AVALIAÇÃO ==================== -->
+        <section class="painel-conteudo">
+            <div class="card-secao">
+                <h2>📊 Critérios de Avaliação (Rubrica Oficial)</h2>
+                <p style="color:var(--text-muted); margin: 6px 0 18px;">Como seu projeto será avaliado pelo professor:</p>
+
+                <div class="tabela-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Critério</th>
+                                <th style="width: 100px;">Peso</th>
+                                <th>O que será avaliado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Responsividade Extrema</strong></td>
+                                <td><span style="color:var(--success); font-weight:800;">30%</span></td>
+                                <td>Página 100% navegável em 320px, 375px e Desktop, sem nenhuma barra de rolagem horizontal indesejada e botões com área de toque confortável.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Integração dos Blocos</strong></td>
+                                <td><span style="color:var(--primary); font-weight:800;">25%</span></td>
+                                <td>Montagem coesa e harmoniosa dos componentes da biblioteca, sem tags desorganizadas ou estilos colidindo.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fidelidade à Paleta</strong></td>
+                                <td><span style="color:var(--warning); font-weight:800;">20%</span></td>
+                                <td>Aplicação correta das cores sugeridas no enunciado, sem reverter para os padrões roxos da biblioteca.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Semântica & Código Limpo</strong></td>
+                                <td><span style="color:#cbd5e1; font-weight:800;">15%</span></td>
+                                <td>Uso de tags adequadas (<code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;footer&gt;</code>) e boa indentação.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Interatividade & JS</strong></td>
+                                <td><span style="color:#cbd5e1; font-weight:800;">10%</span></td>
+                                <td>Menus hambúrguer e sanfonas de FAQ funcionando sem gerar erros em vermelho no console (F12).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- NOTIFICAÇÃO DE CÓDIGO HEX COPIADO -->
+    <div class="toast" id="toast">✅ Cor copiada para a área de transferência!</div>
+
+<script>
+    // CONTROLE DE ABAS
+    function trocarAba(indice) {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('ativo', i === indice));
+        document.querySelectorAll('.painel-conteudo').forEach((p, i) => p.classList.toggle('ativo', i === indice));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // COPIAR CÓDIGO HEX
+    function copiarHex(cor) {
+        navigator.clipboard.writeText(cor).then(() => {
+            const t = document.getElementById('toast');
+            t.textContent = `✅ Cor ${cor} copiada!`;
+            t.classList.add('on');
+            setTimeout(() => t.classList.remove('on'), 1800);
+        });
+    }
+
+    // ATUALIZADOR DO CHECKLIST
+    function atualizarProgresso(checkbox) {
+        const bloco = checkbox.closest('.checklist-progresso');
+        const caixas = bloco.querySelectorAll('input[type="checkbox"]');
+        const marcados = bloco.querySelectorAll('input[type="checkbox"]:checked').length;
+        const total = caixas.length;
+        const perc = Math.round((marcados / total) * 100);
+
+        bloco.querySelector('.barra-progresso-fill').style.width = perc + '%';
+        bloco.querySelector('.perc-label').textContent = perc + '%';
+    }
+</script>
+</body>
+</html>

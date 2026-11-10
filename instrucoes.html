@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instruções — Projeto Aurora</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f1f5f9; color: #0f172a; line-height: 1.65; padding: 24px 14px 80px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  .header { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 50%, #7c3aed 100%); border-radius: 16px; padding: 32px 28px; color: #fff; margin-bottom: 20px; }
+  .header h1 { font-size: 1.6rem; margin-bottom: 8px; }
+  .header p { opacity: .93; font-size: .95rem; }
+
+  .como-usar { background: #fff; border-radius: 14px; padding: 24px 26px; margin-bottom: 20px; box-shadow: 0 6px 20px rgba(0,0,0,.08); border-left: 5px solid #0284c7; }
+  .como-usar h2 { color: #075985; font-size: 1.1rem; margin-bottom: 12px; }
+  .como-usar ol { margin-left: 22px; font-size: .92rem; color: #334155; line-height: 1.8; }
+  .como-usar ol li { margin-bottom: 6px; }
+  .como-usar code { background: #ede9fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-weight: 700; font-size: .88em; }
+
+  .bug { background: #fff; border-radius: 14px; padding: 24px 26px; margin-bottom: 16px; box-shadow: 0 6px 20px rgba(0,0,0,.08); border-top: 5px solid #dc2626; position: relative; }
+  .bug.silencioso { border-top-color: #d97706; }
+  .bug::before { content: attr(data-num); position: absolute; top: -14px; left: 22px; background: linear-gradient(135deg,#dc2626,#f87171); color: #fff; padding: 5px 16px; border-radius: 20px; font-size: .72rem; font-weight: 900; letter-spacing: .5px; }
+  .bug.silencioso::before { background: linear-gradient(135deg,#d97706,#fbbf24); }
+  .bug h3 { font-size: 1.05rem; color: #0f172a; margin-bottom: 12px; padding-top: 4px; }
+
+  .bug h4 { font-size: .76rem; text-transform: uppercase; letter-spacing: .5px; color: #64748b; margin: 14px 0 6px; }
+  .bug p, .bug ul { font-size: .9rem; color: #334155; margin-bottom: 8px; }
+  .bug ul { margin-left: 22px; }
+  .bug code { background: #ede9fe; color: #5b21b6; padding: 1px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-weight: 700; font-size: .86em; }
+
+  .bloco-deveria { background: #dcfce7; border-left: 4px solid #16a34a; padding: 10px 14px; border-radius: 8px; font-size: .88rem; color: #166534; margin-bottom: 10px; }
+  .bloco-deveria strong { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; color: #14532d; }
+
+  .bloco-acontece { background: #fef3c7; border-left: 4px solid #d97706; padding: 10px 14px; border-radius: 8px; font-size: .88rem; color: #78350f; margin-bottom: 10px; }
+  .bloco-acontece strong { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; color: #451a03; }
+
+  .bloco-console { background: #0b0518; border-left: 4px solid #f87171; padding: 10px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: .78rem; line-height: 1.7; color: #f87171; margin-bottom: 10px; white-space: pre-wrap; }
+  .bloco-console strong { color: #f472b6; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 4px; font-family: 'Segoe UI', sans-serif; }
+
+  .bloco-onde { background: #ede9fe; border-left: 4px solid #7c3aed; padding: 10px 14px; border-radius: 8px; font-size: .86rem; color: #5b21b6; margin-bottom: 10px; }
+  .bloco-onde strong { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; color: #4c1d95; }
+
+  .bloco-conserto { background: #e0f2fe; border-left: 4px solid #0284c7; padding: 12px 16px; border-radius: 8px; font-size: .88rem; color: #0c4a6e; }
+  .bloco-conserto strong { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; color: #075985; }
+  .bloco-conserto .linha { background: #fff; border: 1px solid #bae6fd; border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-family: 'Courier New', monospace; font-size: .82rem; color: #075985; }
+
+  .teste { background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); border-radius: 14px; padding: 26px 28px; margin-top: 24px; color: #fff; }
+  .teste h2 { color: #fbbf24; font-size: 1.15rem; margin-bottom: 10px; }
+  .teste p { color: rgba(255,255,255,.9); font-size: .9rem; margin-bottom: 14px; }
+  .upload { background: rgba(255,255,255,.1); border: 2px dashed rgba(255,255,255,.4); border-radius: 10px; padding: 24px; text-align: center; cursor: pointer; transition: all .2s; }
+  .upload:hover { background: rgba(255,255,255,.15); border-color: #fbbf24; }
+  .upload .icone { font-size: 2rem; margin-bottom: 8px; }
+  .upload .texto { font-size: .92rem; font-weight: 700; }
+  .upload .subtexto { font-size: .8rem; color: rgba(255,255,255,.7); margin-top: 4px; }
+  .resultado-teste { margin-top: 16px; background: #0b0518; border-radius: 10px; padding: 16px 18px; font-family: 'Courier New', monospace; font-size: .82rem; color: #e2e8f0; line-height: 1.8; white-space: pre-wrap; display: none; max-height: 400px; overflow-y: auto; }
+  .resultado-teste.mostrar { display: block; }
+  .resultado-teste .ok { color: #4ade80; }
+  .resultado-teste .aviso { color: #fbbf24; }
+  .resultado-teste .erro { color: #f87171; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="header">
+    <h1>📋 Instruções — Projeto Aurora</h1>
+    <p>Você recebeu o arquivo <strong>projeto.html</strong> com 5 bugs. Este caderno explica o que deveria acontecer em cada um, o que acontece hoje, o que o console mostra e como consertar.</p>
+  </header>
+
+  <section class="como-usar">
+    <h2>📂 Como trabalhar</h2>
+    <ol>
+      <li>Abra o <code>projeto.html</code> no navegador (duplo clique).</li>
+      <li>Pressione <strong>F12</strong> para abrir as ferramentas e vá na aba <strong>Console</strong>. É lá que os erros aparecem.</li>
+      <li>Abra o <code>projeto.html</code> também no VSCode (ou seu editor de código preferido).</li>
+      <li>Leia o Bug 1 abaixo. Faça a ação indicada no navegador e veja o erro aparecer no console.</li>
+      <li>Encontre a linha correspondente no código, conserte, salve o arquivo e recarregue a página (F5).</li>
+      <li>Confirme que o bug 1 sumiu e passe para o próximo.</li>
+      <li>No final, faça o upload do seu arquivo no validador abaixo para confirmar os 5 consertos.</li>
+    </ol>
+  </section>
+
+  <!-- BUG 1 -->
+  <article class="bug" data-num="BUG 1">
+    <h3>Botão de orçamento não faz nada</h3>
+
+    <div class="bloco-deveria">
+      <strong>O que deveria acontecer</strong>
+      Clicar no botão amarelo "Solicitar orçamento" abre uma janela de aviso com o texto: "Obrigado pelo interesse! Entraremos em contato em breve."
+    </div>
+
+    <div class="bloco-acontece">
+      <strong>O que acontece hoje</strong>
+      Clicar no botão não faz nada na tela e gera um erro em vermelho no console.
+    </div>
+
+    <div class="bloco-console">
+<strong>No console (F12) ao clicar:</strong>
+Uncaught ReferenceError: pedirOrcamento is not defined
+    at HTMLButtonElement.onclick (projeto.html:XX)</div>
+
+    <div class="bloco-onde">
+      <strong>Onde olhar</strong>
+      No <code>projeto.html</code>, procure a tag <code>&lt;button&gt;</code> do hero. O atributo <code>onclick</code> está configurado chamando <code>pedirOrcamento()</code>. Porém, a função declarada no <code>&lt;script&gt;</code> foi criada com o nome <code>solicitarOrcamento()</code>.
+    </div>
+
+    <div class="bloco-conserto">
+      <strong>Como consertar</strong>
+      Troque o nome chamado no <code>onclick</code> do botão para corresponder ao nome real da função:
+      <div class="linha">&lt;button id="btn-orcamento" class="btn-hero" onclick="solicitarOrcamento()"&gt;Solicitar orçamento&lt;/button&gt;</div>
+    </div>
+  </article>
+
+  <!-- BUG 2 -->
+  <article class="bug" data-num="BUG 2">
+    <h3>Campo de nome não cumprimenta</h3>
+
+    <div class="bloco-deveria">
+      <strong>O que deveria acontecer</strong>
+      Ao digitar o seu nome no campo "Seu nome" e teclar Enter (ou clicar fora do campo), o sistema exibe o alerta: "Olá, [seu nome]! Seja bem-vindo(a)."
+    </div>
+
+    <div class="bloco-acontece">
+      <strong>O que acontece hoje</strong>
+      Após digitar o nome e teclar Enter, nada é exibido e o console acusa que tentamos ler uma propriedade de <code>null</code>.
+    </div>
+
+    <div class="bloco-console">
+<strong>No console (F12) ao confirmar o nome:</strong>
+Uncaught TypeError: Cannot read properties of null (reading 'value')
+    at personalizarSaudacao (projeto.html:XX)</div>
+
+    <div class="bloco-onde">
+      <strong>Onde olhar</strong>
+      No <code>&lt;script&gt;</code>, dentro da função <code>personalizarSaudacao</code>, o código busca por <code>document.getElementById("nome-completo")</code>. Porém, no HTML, o campo foi definido com <code>id="nome"</code>. Como o ID procurado não existe, o método retorna <code>null</code> e a linha seguinte quebra ao tentar acessar <code>.value</code>.
+    </div>
+
+    <div class="bloco-conserto">
+      <strong>Como consertar</strong>
+      Substitua <code>"nome-completo"</code> pelo ID correto <code>"nome"</code> dentro de <code>getElementById</code>:
+      <div class="linha">let campo = document.getElementById("nome");</div>
+    </div>
+  </article>
+
+  <!-- BUG 3 -->
+  <article class="bug silencioso" data-num="BUG 3 · SILENCIOSO">
+    <h3>Card de preço não reage ao mouse</h3>
+
+    <div class="bloco-deveria">
+      <strong>O que deveria acontecer</strong>
+      Passar o cursor do mouse sobre o card "Essencial" muda o fundo para amarelo claro e a borda para laranja. Ao retirar o mouse de cima dele, o card volta ao estado padrão (fundo branco, borda cinza).
+    </div>
+
+    <div class="bloco-acontece">
+      <strong>O que acontece hoje</strong>
+      Passar o mouse sobre o card não faz nada. O card só muda de cor se você <strong>clicar</strong> nele, e depois ele fica preso na cor amarela para sempre.
+    </div>
+
+    <div class="bloco-console">
+<strong>No console:</strong>
+(silencioso — nada aparece, pois a sintaxe está correta, mas o evento utilizado foi o errado)</div>
+
+    <div class="bloco-onde">
+      <strong>Onde olhar</strong>
+      No <code>&lt;script&gt;</code>, procure por <code>addEventListener("click", entrarNoCard)</code>. O evento configurado foi <code>"click"</code> em vez de <code>"mouseover"</code>. Além disso, a função <code>sairDoCard</code> já existe no arquivo, mas falta registrá-la para o evento <code>"mouseout"</code>.
+    </div>
+
+    <div class="bloco-conserto">
+      <strong>Como consertar</strong>
+      Substitua o evento <code>"click"</code> por <code>"mouseover"</code> e adicione uma nova linha registrando <code>"mouseout"</code>:
+      <div class="linha">document.getElementById("card-preco").addEventListener("mouseover", entrarNoCard);
+document.getElementById("card-preco").addEventListener("mouseout", sairDoCard);</div>
+    </div>
+  </article>
+
+  <!-- BUG 4 -->
+  <article class="bug" data-num="BUG 4">
+    <h3>Cálculo de desconto não mostra resultado</h3>
+
+    <div class="bloco-deveria">
+      <strong>O que deveria acontecer</strong>
+      Ao clicar em "Calcular desconto", o valor com 10% de desconto aplicado deve aparecer na tela (ex.: "Com desconto: R$ 1350.00").
+    </div>
+
+    <div class="bloco-acontece">
+      <strong>O que acontece hoje</strong>
+      Ao clicar no botão, nenhum resultado aparece e o console acusa erro ao tentar chamar <code>.toFixed()</code> em algo indefinido (<code>undefined</code>).
+    </div>
+
+    <div class="bloco-console">
+<strong>No console (F12) ao clicar:</strong>
+Uncaught TypeError: Cannot read properties of undefined (reading 'toFixed')
+    at calcularEExibir (projeto.html:XX)</div>
+
+    <div class="bloco-onde">
+      <strong>Onde olhar</strong>
+      A função <code>calcularDesconto(preco)</code> faz a conta, mas <strong>não possui a palavra-chave <code>return</code></strong>. Em JavaScript, uma função sem <code>return</code> devolve <code>undefined</code>. Por isso, a função seguinte tenta fazer <code>resultado.toFixed(2)</code> em cima de nada e quebra.
+    </div>
+
+    <div class="bloco-conserto">
+      <strong>Como consertar</strong>
+      Retorne o resultado final inserindo <code>return precoFinal;</code> antes de fechar a função:
+      <div class="linha">function calcularDesconto(preco) {
+  const taxa = 0.1;
+  let desconto = preco * taxa;
+  let precoFinal = preco - desconto;
+  return precoFinal;
+}</div>
+    </div>
+  </article>
+
+  <!-- BUG 5 -->
+  <article class="bug silencioso" data-num="BUG 5 · SILENCIOSO">
+    <h3>Contador de caracteres fica sempre zerado</h3>
+
+    <div class="bloco-deveria">
+      <strong>O que deveria acontecer</strong>
+      Conforme você digita na caixa "Mensagem", o contador abaixo deve atualizar em tempo real, informando o número exato de caracteres inseridos (ex.: "15 / 200").
+    </div>
+
+    <div class="bloco-acontece">
+      <strong>O que acontece hoje</strong>
+      Ao digitar na mensagem, o contador fica travado em "0 / 200". O console mostra que o número esperado era maior do que zero.
+    </div>
+
+    <div class="bloco-console">
+<strong>No console, ao digitar:</strong>
+Contador: 0 caracteres (esperado: 12)</div>
+
+    <div class="bloco-onde">
+      <strong>Onde olhar</strong>
+      Na função <code>contarCaracteres(texto)</code>, repare no laço de repetição: <code>for (let i = 0; i &lt; 0; i++)</code>. A variável <code>i</code> começa valendo <code>0</code>. Como a condição de continuação é <code>i &lt; 0</code> (0 é menor que 0? Não!), ela já começa falsa e o laço nunca chega a rodar. A variável <code>total</code> permanece em 0.
+    </div>
+
+    <div class="bloco-conserto">
+      <strong>Como consertar</strong>
+      Faça o laço percorrer toda a extensão da string trocando <code>i &lt; 0</code> por <code>i &lt; texto.length</code>:
+      <div class="linha">for (let i = 0; i &lt; texto.length; i++) {</div>
+    </div>
+  </article>
+
+  <!-- TESTE AUTOMATIZADO -->
+  <section class="teste">
+    <h2>🧪 Testar consertos</h2>
+    <p>Depois de consertar os bugs no seu <code style="background:rgba(255,255,255,.2);padding:1px 5px;border-radius:3px;">projeto.html</code>, carregue o arquivo abaixo para verificar se está tudo certo.</p>
+
+    <div class="upload" id="upload">
+      <div class="icone">📁</div>
+      <div class="texto">Clique para selecionar o projeto.html consertado</div>
+      <div class="subtexto">ou arraste o arquivo para cá</div>
+    </div>
+    <input type="file" id="file-input" accept=".html" style="display:none;">
+
+    <div class="resultado-teste" id="resultado-teste"></div>
+  </section>
+
+</div>
+
+<script>
+  var upload = document.getElementById('upload');
+  var fileInput = document.getElementById('file-input');
+  var resultadoDiv = document.getElementById('resultado-teste');
+
+  upload.addEventListener('click', function() { fileInput.click(); });
+
+  upload.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    upload.style.borderColor = '#fbbf24';
+  });
+  upload.addEventListener('dragleave', function() {
+    upload.style.borderColor = 'rgba(255,255,255,.4)';
+  });
+  upload.addEventListener('drop', function(e) {
+    e.preventDefault();
+    upload.style.borderColor = 'rgba(255,255,255,.4)';
+    if (e.dataTransfer.files.length) processar(e.dataTransfer.files[0]);
+  });
+
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files.length) processar(fileInput.files[0]);
+  });
+
+  function processar(file) {
+    if (!file.name.endsWith('.html')) {
+      mostrar('❌ O arquivo precisa ser .html. Você enviou: ' + file.name);
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) { rodarTestes(e.target.result); };
+    reader.readAsText(file);
+  }
+
+  function rodarTestes(html) {
+    var iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.top = '-10000px';
+    iframe.style.width = '1000px';
+    iframe.style.height = '1000px';
+    document.body.appendChild(iframe);
+
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(html);
+    iframe.contentDocument.close();
+
+    setTimeout(function() {
+      var win = iframe.contentWindow;
+      var doc = iframe.contentDocument;
+
+      // Desativa alertas pop-up no iframe para o teste rodar sem travar
+      win.alert = function() {};
+
+      var resultado = '';
+
+      // Bug 1
+      try {
+        var btn = doc.getElementById('btn-orcamento');
+        if (btn) {
+          var onclick = btn.getAttribute('onclick') || '';
+          if (onclick.indexOf('solicitarOrcamento') !== -1) {
+            resultado += '✅ Bug 1 — botão de orçamento: funcionando\n';
+          } else {
+            resultado += '❌ Bug 1 — botão de orçamento: onclick ainda chama a função errada\n';
+          }
+        } else {
+          resultado += '❌ Bug 1 — botão não encontrado\n';
+        }
+      } catch(e) { resultado += '❌ Bug 1 — erro: ' + e.message + '\n'; }
+
+      // Bug 2 (Aceita aspas duplas, simples ou template literals)
+      try {
+        var scripts = doc.querySelectorAll('script');
+        var scriptText = '';
+        scripts.forEach(function(s) { scriptText += s.textContent; });
+
+        if (scriptText.indexOf('nome-completo') !== -1) {
+          resultado += '❌ Bug 2 — campo de nome: a função ainda busca "nome-completo"\n';
+        } else if (/getElementById\s*\(\s*["'`]nome["'`]\s*\)/.test(scriptText)) {
+          resultado += '✅ Bug 2 — campo de nome: id correto configurado\n';
+        } else {
+          resultado += '❌ Bug 2 — não foi possível identificar a busca por id "nome"\n';
+        }
+      } catch(e) { resultado += '❌ Bug 2 — erro: ' + e.message + '\n'; }
+
+      // Bug 3 (Verifica tanto o mouseover quanto o mouseout)
+      try {
+        var card = doc.getElementById('card-preco');
+        if (card) {
+          var bgAntes = card.style.background || card.style.backgroundColor;
+          card.dispatchEvent(new win.MouseEvent('mouseover', { bubbles: true }));
+          var bgHover = card.style.background || card.style.backgroundColor;
+          card.dispatchEvent(new win.MouseEvent('mouseout', { bubbles: true }));
+          var bgDepois = card.style.background || card.style.backgroundColor;
+
+          if (bgHover && bgHover !== bgAntes && bgDepois !== bgHover) {
+            resultado += '✅ Bug 3 — card de preço: mouseover e mouseout funcionando\n';
+          } else if (bgHover && bgHover !== bgAntes) {
+            resultado += '⚠️ Bug 3 — card de preço: mouseover funciona, mas falta configurar mouseout\n';
+          } else {
+            resultado += '❌ Bug 3 — card de preço: não responde a mouseover\n';
+          }
+        } else {
+          resultado += '❌ Bug 3 — card não encontrado\n';
+        }
+      } catch(e) { resultado += '❌ Bug 3 — erro: ' + e.message + '\n'; }
+
+      // Bug 4
+      try {
+        var calc = win.calcularDesconto;
+        if (typeof calc === 'function') {
+          var teste = calc(100);
+          if (teste === 90) {
+            resultado += '✅ Bug 4 — cálculo de desconto: funcionando com return\n';
+          } else if (teste === undefined) {
+            resultado += '❌ Bug 4 — cálculo de desconto: falta a instrução return\n';
+          } else {
+            resultado += '❌ Bug 4 — cálculo de desconto: valor inesperado (' + teste + ')\n';
+          }
+        } else {
+          resultado += '❌ Bug 4 — função calcularDesconto não encontrada\n';
+        }
+      } catch(e) { resultado += '❌ Bug 4 — erro: ' + e.message + '\n'; }
+
+      // Bug 5
+      try {
+        var contar = win.contarCaracteres;
+        if (typeof contar === 'function') {
+          var teste = contar('abcde');
+          if (teste === 5) {
+            resultado += '✅ Bug 5 — contador de caracteres: funcionando\n';
+          } else {
+            resultado += '❌ Bug 5 — contador: retornou ' + teste + ' em vez de 5\n';
+          }
+        } else {
+          resultado += '❌ Bug 5 — função contarCaracteres não encontrada\n';
+        }
+      } catch(e) { resultado += '❌ Bug 5 — erro: ' + e.message + '\n'; }
+
+      var okCount = (resultado.match(/✅/g) || []).length;
+      var header = okCount === 5
+        ? '🎉 PARABÉNS! Todos os 5 bugs foram consertados com sucesso.\n\n'
+        : 'Você consertou ' + okCount + ' de 5 bugs.\n\n';
+
+      mostrar(header + resultado);
+      iframe.remove();
+    }, 300);
+  }
+
+  function mostrar(texto) {
+    resultadoDiv.classList.add('mostrar');
+    var linhas = texto.split('\n');
+    resultadoDiv.innerHTML = linhas.map(function(linha) {
+      if (linha.indexOf('✅') !== -1) return '<span class="ok">' + linha + '</span>';
+      if (linha.indexOf('⚠️') !== -1) return '<span class="aviso">' + linha + '</span>';
+      if (linha.indexOf('❌') !== -1) return '<span class="erro">' + linha + '</span>';
+      return linha;
+    }).join('\n');
+  }
+</script>
+</body>
+</html>
